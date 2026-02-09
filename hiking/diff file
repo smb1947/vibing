@@ -1,0 +1,400 @@
+   1 -# Trail Picker — Kritikal Adventures Weekly Trail Selection
+        1 +---
+        2 +name: trail-picker
+        3 +description: |
+        4 +  Pick the 3 best hiking trails for a specific Saturday near Seattle for Kritikal Adventures.
+        5 +  Two-phase decision engine: extract candidates from AllTrails, then layer real-time weather,
+        6 +  snow, road, and elevation progression intelligence. Invoke when user says "pick a hike",
+        7 +  "find trails", "plan Saturday hike", "trail picker", or discusses weekly hiking planning.
+        8 +---
+        9
+       10 -## Purpose
+       10 +# Trail Picker — Kritikal Adventures Weekly Hike Selection
+       11
+       12 -Pick the **3 best hiking trails for a specific Saturday** near Seattle for the Kritikal Adventures group.
+          -This is a two-phase AI decision engine: Phase 1 extracts trail candidates from AllTrails via Chrome, Phase 2  
+          -layers on real-time weather, snow, road, and history intelligence that AllTrails cannot provide.
+       12 +## Overview
+       13
+       14 -## When to Use
+       14 +Two-phase agentic workflow that replaces an hour of manual research with a 90-second interaction.
+       15 +- **Phase 1**: Extract trail candidates from AllTrails via Chrome (or fallback)
+       16 +- **Phase 2**: Layer real-time weather, snow, road, and history intelligence AllTrails can't provide
+       17
+       18 -Invoke this skill when the user wants to pick a hike for the week, mentions "trail picker", or asks for
+          -hiking suggestions for Kritikal Adventures.
+       18 +**Hike log**: `/Users/shankarmb/Library/CloudStorage/OneDrive-UW/vibing/hiking/hike-log.md`
+       19 +**PRD reference**: `/Users/shankarmb/Library/CloudStorage/OneDrive-UW/vibing/hiking/PRD - Kritikal Adventures
+          + Trail Picker.md`
+       20
+       21  ---
+       22
+       23 -## Step 1: Gather Inputs
+       23 +## Step 1: Load Hike History
+       24
+       25 -Ask the user for:
+       25 +Read the hike log at the path above. If it exists, extract:
+       26 +- All 2026 trail names → **exclusion list**
+       27 +- Regions hiked in last 5 weeks → **over-represented regions** (deprioritize)
+       28 +- Most recent hike's elevation gain → **progression baseline**
+       29 +- Trail types from last 3 hikes → **dissimilarity scoring**
+       30
+       31 -1. **AllTrails filtered URL** (required) — The user applies their own filters on AllTrails (difficulty,
+          -distance, elevation, attractions, suitability) and pastes the URL. All filter state is encoded in the URL
+          -query parameters.
+       32 -2. **Hike date** (optional) — Default: next Saturday. If today is Saturday, default to the following
+          -Saturday. Must be within 10 days for reliable weather.
+       33 -3. **Past hikes this year** (optional) — Comma-separated trail names. Used to: exclude exact trails,
+          -deprioritize over-represented regions, avoid similar trail types, and infer elevation progression.
+       34 -4. **Optional overrides** — Mention but don't force:
+       35 -   - Max hike duration (default: 5 hours)
+       36 -   - Target elevation gain (default: auto-calculated from past hikes)
+       37 -   - Max drive time (default: 3 hours one-way from Greenlake)
+       31 +If the file doesn't exist, continue with defaults (no exclusions, 500–1000 ft target elevation).
+       32
+       33  ---
+       34
+       35 -## Step 2: Phase 1 — Browse AllTrails via Chrome
+       35 +## Step 2: Gather Inputs
+       36
+       37 -Use Claude in Chrome to open the user's AllTrails URL (user must be logged in):
+       37 +Use AskUserQuestion to collect:
+       38
+       39 -1. `tabs_context_mcp` → `tabs_create_mcp` → `navigate` to the AllTrails URL
+       40 -2. Wait for page load, use `read_page` and `get_page_text` to extract trail listings
+       41 -3. For each trail capture: name, distance, elevation gain, difficulty, rating, reviews, location/region,
+          -attraction tags, AllTrails URL
+       42 -4. Aim for **at least 10 candidates**. Scroll to load more if needed.
+       43 -5. If page requires login or shows paywall, notify user to log into AllTrails in Chrome.
+       39 +### Required
+       40 +- **AllTrails filtered URL**: User applies their own filters on alltrails.com (difficulty, distance,
+          +elevation, attractions, route type, suitability), then pastes the resulting URL. All filter state is encoded  
+          +in query params.
+       41
+       42 +### Optional (show smart defaults)
+       43 +- **Hike date**: Default = next Saturday. If today is Saturday, use the following Saturday. Must be within 10
+          + days for reliable weather. Calculate with: `date -v+sat +%Y-%m-%d` (macOS)
+       44 +- **Past hikes**: Auto-populated from hike log. User can override with comma-separated list.
+       45 +- **Max duration**: Default 5 hours
+       46 +- **Target elevation gain**: Default auto-calculated (most recent gain + 200–500 ft)
+       47 +- **Max drive time**: Default 3 hours one-way from Greenlake
+       48 +
+       49  ---
+       50
+       51 -## Step 3: Phase 2 — Condition Research
+       51 +## Step 3: Phase 1 — Extract Trail Candidates
+       52
+       53 -Run parallel web searches for the candidate trails:
+       53 +### Primary: Claude in Chrome
+       54
+       55 -- **NWS point forecast** for each trail's region on the target date
+       56 -- **NWAC avalanche forecast + snow level** for the Cascades
+       57 -- **WSDOT road conditions** for relevant passes/roads
+       58 -- **WTA recent trip reports** for each candidate trail (last 14 days)
+       55 +The user must be logged into AllTrails in their Chrome browser.
+       56
+       57 -Use `WebSearch`, `WebFetch`, and `Task` (subagents) to parallelize research.
+       57 +1. Call `mcp__Claude_in_Chrome__tabs_context_mcp` with `createIfEmpty: true` to get tab context
+       58 +2. Call `mcp__Claude_in_Chrome__tabs_create_mcp` to open a new tab
+       59 +3. Navigate to the AllTrails URL using `mcp__Claude_in_Chrome__navigate`
+       60 +4. Wait 3 seconds for page load
+       61 +5. Use `mcp__Claude_in_Chrome__read_page` and `mcp__Claude_in_Chrome__get_page_text` to extract listings
+       62
+       63 +For each trail, capture:
+       64 +- Trail name
+       65 +- Distance (miles, round-trip)
+       66 +- Elevation gain (feet)
+       67 +- Difficulty (Easy / Moderate / Hard / Strenuous)
+       68 +- Star rating + review count
+       69 +- Location / region
+       70 +- Attraction tags (waterfall, lake, views, etc.)
+       71 +- Direct AllTrails URL
+       72 +
+       73 +**Target: 10+ candidates.** If fewer visible, scroll down and re-read to load more.
+       74 +
+       75 +### If Chrome Fails
+       76 +
+       77 +If Chrome MCP tools are unavailable, login is required, or extraction fails:
+       78 +
+       79 +**Fallback A — User pastes data**: Ask user to copy trail listings from their browser. Accept any format
+          +(names only is fine — agent can WebSearch for details).
+       80 +
+       81 +**Fallback B — WebSearch discovery**: Parse the AllTrails URL query params to understand filters (difficulty,
+          + elevation range, region bounds), then:
+       82 +```
+       83 +WebSearch: "best [difficulty] hiking trails [region] [distance range] alltrails.com"
+       84 +WebSearch: "top rated moderate hikes near Snoqualmie Pass 6-10 miles"
+       85 +```
+       86 +Extract trail candidates from search results.
+       87 +
+       88  ---
+       89
+       90 -## Step 4: Hard Filters (Exclude)
+       90 +## Step 4: Phase 2 — Condition Research (Parallel Subagents)
+       91
+       92 -Drop any trail that fails these:
+       92 +**Critical: Use Task subagents to parallelize.** Launch one subagent per candidate trail (up to 10 in
+          +parallel).
+       93
+       94 -| Constraint | Rule | Source |
+       94 +Each subagent prompt:
+       95 +
+       96 +```
+       97 +Research real-time conditions for "[Trail Name]" in [Region] for hiking on [Target Date].
+       98 +
+       99 +1. WEATHER — Search: "NWS forecast [nearest town/area] [Target Date]"
+      100 +   Return: High/low temp (F), precipitation %, wind speed, condition summary
+      101 +
+      102 +2. SNOW LEVEL — Search: "NWAC snow level forecast Washington Cascades [Target Date]"
+      103 +   Return: Forecasted snow level elevation (ft). Compare to trailhead elevation [X ft].
+      104 +
+      105 +3. ROAD CONDITIONS — Search: "WSDOT [highway/road to trailhead] road conditions"
+      106 +   Return: Open/closed, chain requirements, sedan-friendly (yes/no), source
+      107 +
+      108 +4. TRAIL CONDITIONS — Search: "WTA trip report [Trail Name] site:wta.org"
+      109 +   Find reports from last 14 days.
+      110 +   Return: Trail surface (clear/snow/ice/mud), date of latest report, road mentions
+      111 +
+      112 +5. HAZARDS — Search: "NWAC avalanche forecast [region]" and "NWS weather advisory [region]"
+      113 +   Return: Any active warnings (avalanche, severe weather, ice)
+      114 +
+      115 +Return all findings as structured text. If data unavailable, say "unavailable" for that field.
+      116 +```
+      117 +
+      118 +**Also run one shared subagent** for regional data that applies to all trails:
+      119 +```
+      120 +Search for NWAC Cascades snow level forecast and NWS regional weather overview for [Target Date].
+      121 +Compare west-side Cascades vs east-side Cascades precipitation outlook.
+      122 +Return: snow level elevation, west-side precip%, east-side precip%, any severe advisories.
+      123 +```
+      124 +
+      125 +Compile all subagent results into a structured dataset per trail.
+      126 +
+      127 +---
+      128 +
+      129 +## Step 5: Hard Filters
+      130 +
+      131 +**Exclude** any trail failing these. Track rejections (trail name, reason, data point).
+      132 +
+      133 +| Filter | Rule | Source |
+      134  |---|---|---|
+      135 -| Max drive time | ≤ 3 hours one-way from Greenlake (or override) | Google Maps / agent knowledge |
+      136 -| Road access | Sedan-friendly: paved or well-maintained gravel. Exclude if rough roads, washouts, or chain
+          -requirements. | WSDOT + WTA trip reports |
+      137 -| Trail accessibility | Must be open on target date. Not gated, closed, or washed out. Flag "unverified" if
+          -no recent data. | WTA trip reports (14 days) + closure notices |
+      138 -| Snow level safety | Trailhead elevation > forecasted snow level → exclude (unless user wants snow) | NWAC |
+      139 -| Dangerous conditions | Active avalanche warnings, severe weather, hazardous ice → exclude | NWAC + NWS |
+      140 -| Max duration | ≤ user max (default 5 hours) | Agent estimate from distance + elevation |
+      141 -| Not previously hiked | Exclude trails in user's past hikes list | User input |
+      135 +| Drive time | > 3 hours one-way from Greenlake → exclude | Agent knowledge of PNW drive times |
+      136 +| Road access | Rough road, washout, chain requirement (unless confirmed plowed) → exclude | WSDOT + WTA from
+          + subagents |
+      137 +| Trail closed | Gated, closed for season, washed out → exclude | WTA reports + official closures |
+      138 +| Snow level | Trailhead elevation > forecasted snow level → exclude (unless user wants snow) | NWAC
+          +from subagents |
+      139 +| Hazards | Active avalanche warning, severe weather advisory, hazardous ice → exclude | NWAC + NWS
+          +from subagents |
+      140 +| Duration | Estimated time > max (default 5 hrs) → exclude. Estimate: `(distance_mi / 2) + (elevation_ft /
+          +1000)` hours | Calculated |
+      141 +| Previously hiked | Trail name in exclusion list → exclude | Hike log |
+      142
+      143 +**Special cases:**
+      144 +- No WTA reports within 14 days → **don't exclude**, flag as "conditions unverified"
+      145 +- Trailhead within 500 ft of snow level → **don't exclude**, flag as "marginal snow risk"
+      146 +- No WSDOT data → check WTA reports for road mentions; if none, flag "road conditions unknown"
+      147 +
+      148  ---
+      149
+      150 -## Step 5: Rank & Select Top 3
+      150 +## Step 6: Rank & Select Top 3
+      151
+      152 -Rank surviving trails by:
+      152 +Score each surviving trail (0–100 scale per factor):
+      153
+      154 -| Factor | Weight | Logic |
+      154 +| Factor | Weight | Scoring |
+      155  |---|---|---|
+      156 -| Weather fit | Very High | Best weather on target date wins. If west Cascades have rain but east side is
+          -clear, push east-side trails up. If rain everywhere, prefer tree cover. |
+      157 -| Trail condition quality | High | Prefer clear/dry. Moderate snow OK if user wants it or reports confirm
+          -passability. |
+      158 -| Progressive elevation gain | Medium | Target = most recent hike gain + 200–500 ft. Spread picks: one at
+          -target, one ~200 ft below, one ~200 ft above. If no past hikes, default 500–1000 ft. |
+      159 -| Region + type variety | Medium | Deprioritize over-represented regions. 3 picks should be in different
+          -regions or offer different trail types. |
+      160 -| Dissimilarity to recent hikes | Medium | If last 3 hikes were lake trails, boost ridge or waterfall trails.
+          - |
+      161 -| Drive time | Low | Shorter is better but not dominant. |
+      156 +| **Weather fit** | 40% | `100 - (precip% * 0.7) - wind_penalty - temp_penalty`. West Cascades rainy (>60%)
+          +but east clear (<30%) → boost east trails +20. Rain everywhere → boost tree-cover trails +15. |
+      157 +| **Trail condition** | 25% | Clear/dry=100, Light snow (passable)=80, Mud=70, Moderate snow=60,
+          +Unverified=50, Heavy snow/ice=30 |
+      158 +| **Elevation progression** | 20% | Target = last hike gain + 350ft (or 750ft if no history). Score = `100 -  
+          +abs(trail_gain - target) / 5` |
+      159 +| **Region variety** | 10% | Region in last 5 hikes 2+ times → -20. Different region from last hike → +10 |
+      160 +| **Type variety** | 5% | Last 3 hikes same type (lake/ridge/waterfall) and this matches → -15. Different
+          +type → +10 |
+      161
+      162 +**Selection rules:**
+      163 +1. Sort by weighted total score descending
+      164 +2. Pick #1 (highest score)
+      165 +3. Pick #2 and #3 ensuring: at least 2 different regions across the 3 picks, and elevation diversity (one
+          +near target, one ~200ft below, one ~200ft above)
+      166 +4. Ties → prefer shorter drive time
+      167 +
+      168  ---
+      169
+      170 -## Step 6: Iterate If Needed
+      170 +## Step 7: Iterate If < 3 Survive
+      171
+      172 -If fewer than 3 trails survive:
+      173 -1. Relax distance/duration constraints by 20%
+      174 -2. If still < 3, ask user for a broader AllTrails URL
+      175 -3. Re-run Phase 1 + Phase 2 on new results
+      176 -4. If still < 3, present what's available with explanation
+      172 +**Round 1**: Relax non-safety constraints by 20%
+      173 +- Duration: 5hr → 6hr
+      174 +- Drive time: 3hr → 3.6hr
+      175 +- Re-apply filters to original candidate set
+      176
+      177 +**Round 2**: Ask user for a broader AllTrails URL with relaxed filters. If provided, re-run from Step 3.
+      178 +
+      179 +**Round 3**: Present what's available with note: "Limited options this week due to [primary constraint].
+          +Consider [suggestion]."
+      180 +
+      181  ---
+      182
+      183 -## Step 7: Present Output
+      183 +## Step 8: Present Output
+      184
+      185 -For each of the 3 picks, show:
+      185 +### Per trail (3 picks):
+      186
+      187 -- **Trail Name**
+      188 -- **Location / Region** (e.g., Mt. Rainier, Snoqualmie, Mt. Baker, Olympics)
+      189 -- **Distance** (round-trip miles)
+      190 -- **Elevation Gain** (feet)
+      191 -- **Estimated Duration**
+      192 -- **Drive Time from Greenlake** (one-way)
+      193 -- **Road Condition** — sedan-friendly or not, with source
+      194 -- **Trail Condition** — snow, ice, mud, clear + date of most recent report
+      195 -- **Weather Forecast** — high/low temp, precipitation %, wind for the target date
+      196 -- **Snow Level** — forecasted snow line vs. trailhead and summit elevation
+      197 -- **Scenic Highlights** — matched to user's preferences
+      198 -- **Why This Trail on This Day** — 2-3 sentences referencing: (a) preference match, (b) weather/conditions
+          -favoring this date, (c) elevation progression fit
+      199 -- **AllTrails Link**
+      187 +```
+      188 +## [1/2/3]. [Trail Name]
+      189
+      190 -Also show rejected trails and reasons.
+      190 +**Location**: [Region]
+      191 +**Distance**: [X.X] mi | **Elevation Gain**: [XXXX] ft | **Difficulty**: [Level]
+      192 +**Estimated Duration**: [X.X] hrs
+      193
+      194 -End with: "Want to adjust preferences and re-search?"
+      194 +### Access
+      195 +- **Drive from Greenlake**: [X.X] hrs
+      196 +- **Road**: [Paved/Gravel] — Sedan-friendly: [Yes/No] (source: [WSDOT/WTA MM/DD])
+      197
+      198 +### Conditions for [Date]
+      199 +- **Weather**: High [XX]F / Low [XX]F | Precip: [XX]% | Wind: [X] mph | [Clear/Rain/etc.]
+      200 +- **Trail**: [Clear/Snow/Mud/etc.] — Last report: [Date] via WTA [or "Unverified"]
+      201 +- **Snow Level**: Forecast [XXXX] ft | Trailhead [XXXX] ft — [Safe/Marginal/Above]
+      202 +
+      203 +### Highlights
+      204 +[Scenic features matching user preferences]
+      205 +
+      206 +### Why This Trail on This Day
+      207 +[2-3 sentences: (a) how it matches filter preferences, (b) why weather/conditions favor it
+      208 +on this specific date vs alternatives, (c) how it fits the elevation progression arc]
+      209 +
+      210 +**AllTrails**: [URL]
+      211 +```
+      212 +
+      213 +### Rejected trails:
+      214 +
+      215 +```
+      216 +## Trails Considered But Excluded
+      217 +
+      218 +| Trail | Reason | Detail |
+      219 +|---|---|---|
+      220 +| [Name] | Snow level | Trailhead 3200ft, snow level 2800ft |
+      221 +| [Name] | Road closed | WSDOT: SR-20 closed until April |
+      222 +| [Name] | Previously hiked | Completed 2026-01-18 |
+      223 +```
+      224 +
+      225 +### End with:
+      226 +
+      227 +```
+      228 +Want to adjust and re-search? Options:
+      229 +- Relax filters and retry
+      230 +- Change target date
+      231 +- Override elevation target
+      232 +- Provide broader AllTrails URL
+      233 +```
+      234 +
+      235  ---
+      236
+      237 -## Error Handling
+      237 +## Step 9: Update Hike Log
+      238
+      239 -| Failure | Fallback |
+      240 -|---|---|
+      241 -| AllTrails won't load / needs login | Notify user to log into AllTrails in Chrome, retry |
+      242 -| Few AllTrails results | Ask for broader URL |
+      243 -| Weather search fails | Note "weather data unavailable", rank without weather |
+      244 -| No recent trip reports | Flag "conditions unverified — check WTA before going" |
+      245 -| NWAC unavailable | Warn user to manually check avalanche conditions |
+      246 -| < 3 trails after iteration | Present what's available with explanation |
+      239 +After presenting results, ask: "Want me to log your chosen trail? Which pick — 1, 2, or 3?"
+      240
+      241 +If yes:
+      242 +1. Read current hike-log.md
+      243 +2. Append row: `| [Date] | [Trail Name] | [Distance] | [Elevation Gain] | [Region] | [User notes] |`
+      244 +3. Write updated file
+      245 +4. Confirm: "Hike log updated."
+      246 +
+      247  ---
+      248
+      249 -## Tools Used
+      249 +## Error Handling
+      250
+      251 -- **Claude in Chrome** (`tabs_context_mcp`, `tabs_create_mcp`, `navigate`, `read_page`, `get_page_text`) —
+          -Browse AllTrails with user's logged-in session
+      252 -- **WebSearch** — Weather forecasts, snow levels, road conditions, WTA trip reports
+      253 -- **WebFetch** — Specific WTA trail pages, NWS forecast pages, WSDOT reports
+      254 -- **Task** (subagents) — Parallelize condition research across trails/regions
+      255 -- **Bash** — Date calculations, data processing
+      256 -- **AskUserQuestion** — Gather inputs, confirm re-runs
+      251 +| Failure | Action |
+      252 +|---|---|
+      253 +| Chrome MCP unavailable | Use Fallback A (user paste) or B (WebSearch) |
+      254 +| AllTrails needs login | Tell user to log into AllTrails in Chrome, retry |
+      255 +| < 5 AllTrails results | Warn user, ask for broader URL |
+      256 +| Weather search fails | Note "unavailable" in output, rank without weather (other factors rescaled) |
+      257 +| No WTA trip reports | Flag "Unverified — check WTA before going" (don't exclude) |
+      258 +| NWAC unavailable | Warn: "Snow data unavailable — check NWAC manually" |
+      259 +| WSDOT unavailable | Check WTA for road mentions; if none, flag "road unknown" |
+      260 +| All subagents fail | Present trails from Phase 1 without condition data, note limitations |
+      261 +| Hike log read/write fails | Continue without history; don't block workflow |
+      262
+      263 -## Scope
+      263 +---
+      264
+      265 -- PNW / Seattle area hiking
+      266 -- Single session, no persistent state
+      267 -- No API keys or stored credentials
+      268 -- Target response time: < 90 seconds
+      265 +## Tools
+      266 +
+      267 +| Tool | Use |
+      268 +|---|---|
+      269 +| **Read / Write** | Hike log persistence |
+      270 +| **Bash** | Date calculation (`date -v+sat +%Y-%m-%d`) |
+      271 +| **Claude in Chrome** (`mcp__Claude_in_Chrome__*`) | AllTrails browsing with user's session |
+      272 +| **WebSearch** | NWS weather, NWAC snow, WSDOT roads, WTA trip reports |
+      273 +| **WebFetch** | Specific WTA/NWS/WSDOT pages when WebSearch is insufficient |
+      274 +| **Task** (subagents, `general-purpose` type) | Parallel per-trail condition research |
+      275 +| **AskUserQuestion** | Input collection, iteration prompts |

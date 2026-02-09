@@ -150,6 +150,9 @@ Research real-time conditions for "[Trail Name]" in [Region] for hiking on [Targ
 5. HAZARDS — Search: "NWAC avalanche forecast [region]" and "NWS weather advisory [region]"
    Return: Any active warnings (avalanche, severe weather, ice)
 
+6. LOGISTICS — Search: "[Trail Name] parking pass required" and "[Trail Name] wilderness group size limit"
+   Return: Pass type (NW Forest/Discover/Sno-Park), Group size limit (if any).
+
 Return all findings as structured text. If data unavailable, say "unavailable" for that field.
 ```
 
@@ -238,6 +241,10 @@ Score each surviving trail (0–100 scale per factor):
 ### Access
 - **Drive from Greenlake**: [X.X] hrs
 - **Road**: [Paved/Gravel] — Sedan-friendly: [Yes/No] (source: [WSDOT/WTA MM/DD])
+
+### Logistics
+- **Pass Required**: [NW Forest / Discover / Sno-Park / None]
+- **Group Limit**: [Number / None]
 
 ### Conditions for [Date]
 - **Weather**: High [XX]F / Low [XX]F | Precip: [XX]% | Wind: [X] mph | [Clear/Rain/etc.]

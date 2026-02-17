@@ -1,0 +1,36 @@
+Hi folks! Welcome to Week 4 of our pilot AI Product Builders Series. On Wednesday we'll meet again in Founders 490, the Innovation Lab. We expect to have a special guest or two to cheer you on. 
+
+Please come prepared to talk about your project, whatever shape or status it's in. Below is a suggested outline to follow - even if you didn't get all the way to something you can demo, answer the questions you can. This is NOT a formal presentation; this will be a casual, safe environment. Don't sweat it. You're welcome to share your portfolio page if you've created one. 
+
+Demo Day: How to Frame Your Product (5–7 minutes)
+1. The problem (30–45 sec)
+Who is this for?
+What’s the specific pain point you’re solving?
+How do people solve this today—and why is that frustrating or inefficient?
+Prompt: “What moment made you think, there has to be a better way?”
+2. Your product & core use case (1–2 min)
+What did you build?
+What is the primary job it helps a user do?
+What’s the one feature that matters most?
+Prompt: “If this product only did one thing well, what would it be?”
+3. Live walkthrough (2–3 min)
+Show the happy path
+Narrate your thinking as a PM, not just what’s on the screen
+Call out where AI/no-code is doing real work vs. glue work
+Prompt: “What decision did you make here—and what tradeoff did you accept?”
+4. What changed through iteration (1 min)
+What was your first version?
+What feedback or testing changed your approach?
+What did you cut or simplify?
+Prompt: “What did you learn that surprised you?”
+5. What’s next (30 sec)
+If you had two more weeks, what would you build next?
+What’s the biggest risk or open question?
+Prompt: “What would you test before investing real resources?”
+
+
+What we’re listening for:
+Clear problem framing
+Evidence of iteration and judgment
+Comfort with ambiguity
+Bias toward action over perfection

@@ -1,4 +1,4 @@
-# Sketch an Agentic AI Workflow: Kritikal Adventures Trail Picker (Seattle Weekend Hikes)
+# Sketch an Agentic AI Workflow: Trail Picker (Seattle Weekend Hikes)
 
 ## Overview
 This workflow solves a narrow operations problem for a hiking organizer: selecting one safe, high-quality Saturday hike from many options without spending 60-90 minutes manually checking AllTrails, weather, snow, roads, and past group history. The agent is not a chatbot; it performs a multi-step decision process with tool use, retrieval, filtering, scoring, and recommendation generation.

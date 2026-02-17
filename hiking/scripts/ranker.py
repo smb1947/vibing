@@ -1,5 +1,5 @@
 """
-Trail Ranker — Kritikal Adventures
+Trail Ranker — Agentic Hike Research
 Implements the weighted scoring system from skill.md Step 6.
 """
 

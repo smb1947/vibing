@@ -2,16 +2,16 @@
 name: trail-picker
 license: Apache-2.0
 metadata:
-  author: smb1947
-  version: "1.1"
+  author: example-org
+  version: "1.0"
 description: |
-  Pick the 3 best hiking trails for weekend hikes near Seattle.
+  Pick the 3 best hiking trails for a specific Saturday near Seattle for Kritikal Adventures.
   Two-phase decision engine: extract candidates from AllTrails, then layer real-time weather,
   snow, road, and elevation progression intelligence. Invoke when user says "pick a hike",
   "find trails", "plan Saturday hike", "trail picker", or discusses weekly hiking planning.
 ---
 
-# Trail Picker — Agentic Hike Research Assistant
+# Trail Picker — Kritikal Adventures Weekly Hike Selection
 
 ## Overview
 
@@ -20,8 +20,8 @@ Two-phase agentic workflow that replaces an hour of manual research with a 90-se
 - **Phase 1**: Extract trail candidates from AllTrails via Chrome (or fallback)
 - **Phase 2**: Layer real-time weather, snow, road, and history intelligence AllTrails can't provide
 
-**Hike log**: `references/hike-log.md`
-**PRD reference**: `references/PRD - Trail Picker.md`
+**Hike log**: `/Users/shankarmb/Library/CloudStorage/OneDrive-UW/vibing/hiking/hike-log.md`
+**PRD reference**: `/Users/shankarmb/Library/CloudStorage/OneDrive-UW/vibing/hiking/PRD - Kritikal Adventures Trail Picker.md`
 
 ---
 
@@ -89,38 +89,6 @@ Output these derived values so the user is aware, but **proceed immediately** wi
 - **Max duration**: Default 5 hours
 - **Target elevation gain**: Default auto-calculated (most recent gain + 200–500 ft)
 - **Max drive time**: Default 3 hours one-way from Greenlake
-
----
-
-### Output: Preference Summary
-
-After gathering inputs and applying the priority order, **output a summary** of the final preferences that will be used for trail selection. This confirms to the user what criteria are active before proceeding with research.
-
-**Format:**
-
-```text
-Trail Preferences for [Date]:
-
-Date: [YYYY-MM-DD] (next Saturday / user override)
-Max duration: [X] hrs
-Target elevation gain: [XXX–XXX] ft (from hike log progression / default / user override)
-Max drive time: [X] hrs from Greenlake
-
-From AllTrails URL:
-  - Difficulty: [Easy/Moderate/Hard/Strenuous]
-  - Distance: [X–X] mi
-  - Elevation range: [XXX–XXX] ft
-  - Attractions: [Waterfall, Lake, Views, etc.]
-  - Route type: [Loop/Out & Back/Point to Point]
-  - Rating: [X.X+] stars
-  - Region: [Map bounds or location description]
-
-Exclusions:
-  - Previously hiked: [Trail 1, Trail 2, ...]
-  - Over-represented regions: [Region A (X recent hikes), Region B (X recent hikes)]
-```
-
-This output should be **concise** and only show non-default values. If the user didn't apply a filter (e.g., no difficulty filter in URL), omit that line.
 
 ---
 

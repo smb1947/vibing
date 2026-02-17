@@ -1,6 +1,6 @@
 # Trail Picker (Hiking Skill)
 
-A two-phase decision engine to pick the best hiking trails for Kritikal Adventures.
+A two-phase decision engine to pick the best hiking trails for weekend hikes.
 
 ## Features
 

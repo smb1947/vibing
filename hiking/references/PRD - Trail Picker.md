@@ -1,9 +1,9 @@
-# PRD: Kritikal Adventures Weekly Trail Picker
+# PRD: Weekend Trail Picker
 
 ## 1. Overview
 
-**Product Name:** Kritikal Adventures Trail Picker
-**Owner:** Shankar (Kritikal Adventures organizer)
+**Product Name:** Trail Picker
+**Owner:** smb1947
 **Last Updated:** February 2026
 **Architecture:** AI agentic workflow, implemented as a Claude Desktop (Cowork) shortcut
 
@@ -29,13 +29,13 @@ A two-phase AI decision engine for picking the **3 best hiking trails for a spec
 
 ## 2. Problem Statement
 
-Every week, the organizer of Kritikal Adventures spends **over an hour** doing the same research loop: browse AllTrails with filters, check the weather for Saturday across multiple mountain regions, check snow levels on NWAC, check which roads are open on WSDOT, remember which trails they've already done, figure out the right difficulty step-up, and then mentally cross-reference all of that to pick one trail. This workflow collapses that entire loop into a single 60-second interaction.
+Every week, the organizer spends **over an hour** doing the same research loop: browse AllTrails with filters, check the weather for Saturday across multiple mountain regions, check snow levels on NWAC, check which roads are open on WSDOT, remember which trails they've already done, figure out the right difficulty step-up, and then mentally cross-reference all of that to pick one trail. This workflow collapses that entire loop into a single 60-second interaction.
 
 ---
 
 ## 3. Target User
 
-The organizer (Shankar), who selects the weekly hike. Not group-facing — the organizer runs the shortcut, reviews the 3 picks, and shares the chosen one with the group.
+The organizer, who selects the weekly hike. Not group-facing — the organizer runs the shortcut, reviews the 3 picks, and shares the chosen one with the group.
 
 ---
 

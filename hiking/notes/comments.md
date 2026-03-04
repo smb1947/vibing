@@ -145,3 +145,40 @@ let's review step 2
 c30:
 format the skill document based on this specification
 https://agentskills.io/specification
+
+c31:
+let's change resources folder to references and rename the refrerences in skill.md accordingly.
+
+C32:
+shouldn't skill.md have relative paths to the files?
+
+C33:
+what do you think is a good title for this skill? I don't want to use "Kritikal Adventures" in the title as it's not relevant to the skill itself.
+
+C34:
+let's change the name of the skill to "Trail Picker — Agentic Hike Research Assistant".
+
+C35: remove "Kritikal Adventures" references from all the files.
+
+C36:
+The output after step 2 doesn't show the user preferences. Summarize the final preferences (from url, defaults, and user inputs if any) in the output. Run the priority order of preferences and then give the summary statement.
+
+current output:
+"Searched web for site:alltrails.com/trail/us/washington "Mount Si Trail" alltrails
+Searched web for site:alltrails.com/trail/us/washington "Mount Townsend Trail"
+Searched web for site:alltrails.com/trail/us/washington/rachel-and-rampart-lakes-trail
+Searched web for weather: Snoqualmie Pass, WA
+Searched web for weather: North Bend, WA
+Searched web for weather: Index, WA"
+
+Prefered output after step 2: 
+Trail Preferences:
+
+Date: Feb 14
+Max duration: 5 hrs
+Target elevation: 750 ft
+Max drive: 3 hrs from Greenlake
+<other preferences> from url
+
+C37:
+Help me understand what output would be helpful after each step - just like step 2 output.

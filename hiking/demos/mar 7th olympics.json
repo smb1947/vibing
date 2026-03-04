@@ -1,0 +1,749 @@
+{
+    "summary": {
+        "count": 7,
+        "displayText": "7 trails"
+    },
+    "queryId": "bf43dd210a51ea4a260d35334507ba9f",
+    "searchResults": [
+        {
+            "ID": 10097120,
+            "popularity": 99.8729,
+            "type": "trail",
+            "_geoloc": {
+                "lat": 47.59969,
+                "lng": -123.15112
+            },
+            "_cluster_geoloc": {
+                "lat": 47.59972,
+                "lng": -123.15119
+            },
+            "length": 10299.776,
+            "difficulty_rating": "3",
+            "avg_rating": 4.7,
+            "num_reviews": 6074,
+            "is_closed": false,
+            "duration_minutes": 208,
+            "has_profile_photo": true,
+            "num_photos": 7277,
+            "area_type": "F",
+            "slug": "trail/us/washington/lower-lena-lake-trail--2",
+            "area_slug": "parks/us/washington/olympic-national-forest",
+            "area_name": "Olympic National Forest",
+            "city_url": "us/washington/lilliwaup",
+            "state_name": "Washington",
+            "name": "Lower Lena Lake Trail",
+            "type_label": "Trail",
+            "location_label": "Olympic National Forest, Washington",
+            "estimated_time_to_complete": {
+                "value": "3.5–4",
+                "unit": "hr"
+            },
+            "description": "This is a nice trail in Olympic National Forest with a moderate climb up to Lake Lena. Dogs are allowed but cannot go on the trail to Upper Lake Lena, as it is part of Olympic National Park, and dogs are not allowed on trails in the national park. Expect company as it is a very popular trail. You will need a recreation pass to park at the trailhead. ",
+            "duration_minutes_hiking": 208,
+            "duration_minutes_trail_running": 104,
+            "duration_minutes_mountain_biking": 76,
+            "duration_minutes_cycling": 59,
+            "objectID": "trail-10097120",
+            "length_text": "6.4 mi",
+            "estimated_time_to_complete_text": "3.5–4 hr",
+            "profile_photo_url": "https://www.alltrails.com/api/alltrails/trails/10097120/profile_photo"
+        },
+        {
+            "popularity": 134.9958,
+            "type": "area",
+            "location_type": "area",
+            "area_type": "N",
+            "_geoloc": {
+                "lat": 47.7943485,
+                "lng": -123.6184658
+            },
+            "trails_count": 195,
+            "state_name": "Washington",
+            "ID": 10106825,
+            "slug": "parks/us/washington/olympic-national-park",
+            "name": "Olympic National Park",
+            "type_label": "National Park",
+            "location_label": "Washington, United States",
+            "objectID": "area-10106825",
+            "has_applicable_trails": true,
+            "display_locations": [
+                "map"
+            ]
+        },
+        {
+            "ID": 10042513,
+            "popularity": 99.2419,
+            "type": "trail",
+            "_geoloc": {
+                "lat": 48.1623,
+                "lng": -123.69842
+            },
+            "_cluster_geoloc": {
+                "lat": 48.16231,
+                "lng": -123.69837
+            },
+            "length": 10299.776,
+            "difficulty_rating": "3",
+            "avg_rating": 4.6,
+            "num_reviews": 1878,
+            "is_closed": false,
+            "duration_minutes": 208,
+            "has_profile_photo": true,
+            "num_photos": 2523,
+            "area_type": "C",
+            "slug": "trail/us/washington/striped-peak-trail",
+            "area_slug": "parks/us/washington/salt-creek-recreation-area",
+            "area_name": "Salt Creek Recreation Area",
+            "city_url": "us/washington/port-angeles",
+            "state_name": "Washington",
+            "name": "Striped Peak Loop",
+            "type_label": "Trail",
+            "location_label": "Salt Creek Recreation Area, Washington",
+            "estimated_time_to_complete": {
+                "value": "3.5–4",
+                "unit": "hr"
+            },
+            "description": "Gorgeous old-growth forest trail with glimpses of the water. The elevation is a bit of a roller coaster, and the trail does get slippery when it’s raining. Trekking poles and sturdy footwear are recommended. This is a very quiet and beautiful trail. Bug spray is recommended during the summer months.",
+            "duration_minutes_hiking": 208,
+            "duration_minutes_trail_running": 104,
+            "duration_minutes_mountain_biking": 76,
+            "duration_minutes_cycling": 59,
+            "objectID": "trail-10042513",
+            "length_text": "6.4 mi",
+            "estimated_time_to_complete_text": "3.5–4 hr",
+            "profile_photo_url": "https://www.alltrails.com/api/alltrails/trails/10042513/profile_photo"
+        },
+        {
+            "ID": 10002047,
+            "popularity": 99.2375,
+            "type": "trail",
+            "_geoloc": {
+                "lat": 47.95522,
+                "lng": -123.8357
+            },
+            "_cluster_geoloc": {
+                "lat": 47.95356,
+                "lng": -123.83299
+            },
+            "length": 11426.314,
+            "difficulty_rating": "3",
+            "avg_rating": 4.6,
+            "num_reviews": 1048,
+            "is_closed": false,
+            "duration_minutes": 246,
+            "has_profile_photo": true,
+            "num_photos": 10332,
+            "area_type": "N",
+            "slug": "trail/us/washington/deer-lake-trail",
+            "area_slug": "parks/us/washington/olympic-national-park",
+            "area_name": "Olympic National Park",
+            "city_url": "us/washington/port-angeles",
+            "state_name": "Washington",
+            "name": "Deer Lake Trail",
+            "type_label": "Trail",
+            "location_label": "Olympic National Park, Washington",
+            "estimated_time_to_complete": {
+                "value": "4.5–5",
+                "unit": "hr"
+            },
+            "description": "Make sure to check the conditions of roads and facilities before you visit at the National Park Service's website https://www.nps.gov/olym/planyourvisit/conditions.htm",
+            "duration_minutes_hiking": 246,
+            "duration_minutes_trail_running": 123,
+            "duration_minutes_mountain_biking": 90,
+            "duration_minutes_cycling": 70,
+            "objectID": "trail-10002047",
+            "length_text": "7.1 mi",
+            "estimated_time_to_complete_text": "4.5–5 hr",
+            "profile_photo_url": "https://www.alltrails.com/api/alltrails/trails/10002047/profile_photo"
+        },
+        {
+            "ID": 10349884,
+            "popularity": 98.2503,
+            "type": "trail",
+            "_geoloc": {
+                "lat": 47.9498,
+                "lng": -123.26495
+            },
+            "_cluster_geoloc": {
+                "lat": 47.94981,
+                "lng": -123.26492
+            },
+            "length": 11748.182,
+            "difficulty_rating": "3",
+            "avg_rating": 4.8,
+            "num_reviews": 820,
+            "is_closed": false,
+            "duration_minutes": 246,
+            "has_profile_photo": true,
+            "num_photos": 1572,
+            "area_type": "N",
+            "slug": "trail/us/washington/maiden-peak-from-deer-park-campground",
+            "area_slug": "parks/us/washington/olympic-national-park",
+            "area_name": "Olympic National Park",
+            "city_url": "us/washington/port-angeles",
+            "state_name": "Washington",
+            "name": "Maiden Peak from Deer Park Campground",
+            "type_label": "Trail",
+            "location_label": "Olympic National Park, Washington",
+            "estimated_time_to_complete": {
+                "value": "4–4.5",
+                "unit": "hr"
+            },
+            "description": "The hike begins at the Deer Park Trailhead, which provides parking and restrooms. The road to the trailhead is a rough, unpaved road. The trail follows the Obstruction Point-Deer Park Trail around Green Mountain to the summit of Maiden Peak. The first three-quarters of the hike is through the forest, while the last part takes you through meadows with panoramic views of the valley and mountains. \n\nYou'll encounter incredible scenery, including forests, meadows, alpine views, and larger...",
+            "duration_minutes_hiking": 246,
+            "duration_minutes_trail_running": 123,
+            "duration_minutes_mountain_biking": 90,
+            "duration_minutes_cycling": 70,
+            "objectID": "trail-10349884",
+            "length_text": "7.3 mi",
+            "estimated_time_to_complete_text": "4–4.5 hr",
+            "profile_photo_url": "https://www.alltrails.com/api/alltrails/trails/10349884/profile_photo"
+        },
+        {
+            "popularity": 117.7279,
+            "type": "area",
+            "location_type": "area",
+            "area_type": "S",
+            "_geoloc": {
+                "lat": 47.6877309,
+                "lng": -122.901759
+            },
+            "trails_count": 5,
+            "state_name": "Washington",
+            "ID": 10115472,
+            "slug": "parks/us/washington/dosewallips-state-park",
+            "name": "Dosewallips State Park",
+            "type_label": "Park",
+            "location_label": "Washington, United States",
+            "objectID": "area-10115472",
+            "has_applicable_trails": true,
+            "display_locations": [
+                "map"
+            ]
+        },
+        {
+            "ID": 10034432,
+            "popularity": 96.0055,
+            "type": "trail",
+            "_geoloc": {
+                "lat": 47.87556,
+                "lng": -123.08149
+            },
+            "_cluster_geoloc": {
+                "lat": 47.8756,
+                "lng": -123.08146
+            },
+            "length": 9656.04,
+            "difficulty_rating": "5",
+            "avg_rating": 4.6,
+            "num_reviews": 547,
+            "is_closed": false,
+            "duration_minutes": 210,
+            "has_profile_photo": true,
+            "num_photos": 826,
+            "area_type": "W",
+            "slug": "trail/us/washington/silver-lake-way-trail",
+            "area_slug": "parks/us/washington/buckhorn-wilderness",
+            "area_name": "Buckhorn Wilderness",
+            "city_url": "us/washington/quilcene",
+            "state_name": "Washington",
+            "name": "Silver Lake Way Trail",
+            "type_label": "Trail",
+            "location_label": "Buckhorn Wilderness, Washington",
+            "estimated_time_to_complete": {
+                "value": "3.5–4",
+                "unit": "hr"
+            },
+            "description": "Silver Creek Trailhead is the start of the hike. The first mile or so alternates flat meadows with moderate inclines. The second mile or so consists of moderate incline with very uneven terrain and narrow trail. The third mile or so consists of steep inclines. There is one semi confusing fork in the trail where you come across two trees one says “No” and the other says “God’s Men”, go towards “God’s Men” and then keep right. ",
+            "duration_minutes_hiking": 210,
+            "duration_minutes_trail_running": 105,
+            "duration_minutes_mountain_biking": 77,
+            "duration_minutes_cycling": 60,
+            "objectID": "trail-10034432",
+            "length_text": "6 mi",
+            "estimated_time_to_complete_text": "3.5–4 hr",
+            "profile_photo_url": "https://www.alltrails.com/api/alltrails/trails/10034432/profile_photo"
+        },
+        {
+            "ID": 10534859,
+            "popularity": 94.651,
+            "type": "trail",
+            "_geoloc": {
+                "lat": 47.97039,
+                "lng": -123.865
+            },
+            "_cluster_geoloc": {
+                "lat": 47.97033,
+                "lng": -123.86501
+            },
+            "length": 8529.502,
+            "difficulty_rating": "5",
+            "avg_rating": 4.6,
+            "num_reviews": 278,
+            "is_closed": false,
+            "duration_minutes": 199,
+            "has_profile_photo": true,
+            "num_photos": 406,
+            "area_type": "N",
+            "slug": "trail/us/washington/mink-lake",
+            "area_slug": "parks/us/washington/olympic-national-park",
+            "area_name": "Olympic National Park",
+            "city_url": "us/washington/port-angeles",
+            "state_name": "Washington",
+            "name": "Mink Lake Trail",
+            "type_label": "Trail",
+            "location_label": "Olympic National Park, Washington",
+            "estimated_time_to_complete": {
+                "value": "3.5–4",
+                "unit": "hr"
+            },
+            "description": "Mink Lake is a peaceful spot located within Washington’s lush forests. The trail leads you through dense forests, bringing you to a calm, clear lake surrounded by trees. The area is quiet, with the stillness of the water providing a great backdrop. There is a significant amount of uphill through the woods, passing creeks before reaching the lake. The hike is located in the Olympic National park, which requires a day use fee or a parks pass. ",
+            "duration_minutes_hiking": 199,
+            "duration_minutes_trail_running": 99,
+            "duration_minutes_mountain_biking": 73,
+            "duration_minutes_cycling": 56,
+            "objectID": "trail-10534859",
+            "length_text": "5.3 mi",
+            "estimated_time_to_complete_text": "3.5–4 hr",
+            "profile_photo_url": "https://www.alltrails.com/api/alltrails/trails/10534859/profile_photo"
+        },
+        {
+            "ID": 10001076,
+            "popularity": 9.2429,
+            "type": "trail",
+            "_geoloc": {
+                "lat": 47.9379,
+                "lng": -124.16782
+            },
+            "_cluster_geoloc": {
+                "lat": 47.93765,
+                "lng": -124.16679
+            },
+            "length": 8690.436,
+            "difficulty_rating": "5",
+            "avg_rating": 3.3,
+            "num_reviews": 24,
+            "is_closed": true,
+            "duration_minutes": 190,
+            "has_profile_photo": true,
+            "num_photos": 15,
+            "area_type": "N",
+            "slug": "trail/us/washington/rugged-ridge-trail",
+            "area_slug": "parks/us/washington/olympic-national-park",
+            "area_name": "Olympic National Park",
+            "city_url": "us/washington/forks",
+            "state_name": "Washington",
+            "name": "Rugged Ridge Trail [CLOSED]",
+            "type_label": "Trail",
+            "location_label": "Olympic National Park, Washington",
+            "estimated_time_to_complete": {
+                "value": "3–3.5",
+                "unit": "hr"
+            },
+            "description": "A 6 mile tound trip to the South Fork Calawah River.\n\nThis is a fragment of the old Snider-Jackson Trail of Forest Service \r\ndays. The trailhead (1000 ft/305 m) is located in the national forest on \r\nFS Road 2913, 2.2 mi/3.5 km beyond its intersection with FS Road 29.\r\n\r\nRugged Ridge, the divide between the Sitkum River and the South Fork Calawah. \r\nforms the national park boundary in this area. Higher in the east, where its \r\nelevation exceeds 3000 ft/914 m, the ridge peters out near the...",
+            "duration_minutes_hiking": 190,
+            "duration_minutes_trail_running": 95,
+            "duration_minutes_mountain_biking": 70,
+            "duration_minutes_cycling": 54,
+            "objectID": "trail-10001076",
+            "length_text": "5.4 mi",
+            "estimated_time_to_complete_text": "3–3.5 hr",
+            "profile_photo_url": "https://www.alltrails.com/api/alltrails/trails/10001076/profile_photo"
+        },
+        {
+            "popularity": 117.5773,
+            "type": "area",
+            "location_type": "area",
+            "area_type": "S",
+            "_geoloc": {
+                "lat": 47.3722926,
+                "lng": -122.9754577
+            },
+            "trails_count": 1,
+            "state_name": "Washington",
+            "ID": 10115697,
+            "slug": "parks/us/washington/twanoh-state-park",
+            "name": "Twanoh State Park",
+            "type_label": "Park",
+            "location_label": "Washington, United States",
+            "objectID": "area-10115697",
+            "has_applicable_trails": true,
+            "display_locations": [
+                "map"
+            ]
+        },
+        {
+            "popularity": 116.173,
+            "type": "area",
+            "location_type": "area",
+            "area_type": "S",
+            "_geoloc": {
+                "lat": 48.0829793,
+                "lng": -122.9621752
+            },
+            "trails_count": 9,
+            "state_name": "Washington",
+            "ID": 10172361,
+            "slug": "parks/us/washington/miller-peninsula-state-park",
+            "name": "Miller Peninsula State Park",
+            "type_label": "Park",
+            "location_label": "Washington, United States",
+            "objectID": "area-10172361",
+            "has_applicable_trails": true,
+            "display_locations": [
+                "map"
+            ]
+        },
+        {
+            "popularity": 115.8521,
+            "type": "area",
+            "location_type": "area",
+            "area_type": "S",
+            "_geoloc": {
+                "lat": 48.1385935,
+                "lng": -122.7698506
+            },
+            "trails_count": 5,
+            "state_name": "Washington",
+            "ID": 10115498,
+            "slug": "parks/us/washington/fort-worden-state-park",
+            "name": "Fort Worden State Park",
+            "type_label": "Park",
+            "location_label": "Washington, United States",
+            "objectID": "area-10115498",
+            "has_applicable_trails": true,
+            "display_locations": [
+                "map"
+            ]
+        },
+        {
+            "popularity": 114.8729,
+            "type": "area",
+            "location_type": "area",
+            "area_type": "F",
+            "_geoloc": {
+                "lat": 47.773096,
+                "lng": -123.0904617
+            },
+            "trails_count": 133,
+            "state_name": "Washington",
+            "ID": 10154347,
+            "slug": "parks/us/washington/olympic-national-forest",
+            "name": "Olympic National Forest",
+            "type_label": "Park",
+            "location_label": "Washington, United States",
+            "objectID": "area-10154347",
+            "has_applicable_trails": true,
+            "display_locations": [
+                "map"
+            ]
+        },
+        {
+            "popularity": 113.8784,
+            "type": "area",
+            "location_type": "area",
+            "area_type": "S",
+            "_geoloc": {
+                "lat": 48.0740525,
+                "lng": -122.7959943
+            },
+            "trails_count": 5,
+            "state_name": "Washington",
+            "ID": 10174795,
+            "slug": "parks/us/washington/fort-townsend-historic-state-park",
+            "name": "Fort Townsend Historic State Park",
+            "type_label": "Park",
+            "location_label": "Washington, United States",
+            "objectID": "area-10174795",
+            "has_applicable_trails": true,
+            "display_locations": [
+                "map"
+            ]
+        },
+        {
+            "popularity": 109.0524,
+            "type": "area",
+            "location_type": "area",
+            "area_type": "S",
+            "_geoloc": {
+                "lat": 48.0174147,
+                "lng": -122.8074564
+            },
+            "trails_count": 3,
+            "state_name": "Washington",
+            "ID": 10109536,
+            "slug": "parks/us/washington/anderson-lake-state-park",
+            "name": "Anderson Lake State Park",
+            "type_label": "Park",
+            "location_label": "Washington, United States",
+            "objectID": "area-10109536",
+            "has_applicable_trails": true,
+            "display_locations": [
+                "map"
+            ]
+        },
+        {
+            "popularity": 104.9958,
+            "type": "area",
+            "location_type": "area",
+            "area_type": "W",
+            "_geoloc": {
+                "lat": 47.7917933,
+                "lng": -123.6105208
+            },
+            "trails_count": 149,
+            "state_name": "Washington",
+            "ID": 10201903,
+            "slug": "parks/us/washington/daniel-j-evans-wilderness",
+            "name": "Daniel J. Evans Wilderness",
+            "type_label": "Park",
+            "location_label": "Washington, United States",
+            "objectID": "area-10201903",
+            "has_applicable_trails": true,
+            "display_locations": [
+                "map"
+            ]
+        },
+        {
+            "popularity": 104.8563,
+            "type": "area",
+            "location_type": "area",
+            "area_type": "S",
+            "_geoloc": {
+                "lat": 48.0401012,
+                "lng": -123.0291616
+            },
+            "trails_count": 1,
+            "state_name": "Washington",
+            "ID": 10115679,
+            "slug": "parks/us/washington/sequim-bay-state-park",
+            "name": "Sequim Bay State Park",
+            "type_label": "Park",
+            "location_label": "Washington, United States",
+            "objectID": "area-10115679",
+            "has_applicable_trails": true,
+            "display_locations": [
+                "map"
+            ]
+        },
+        {
+            "popularity": 104.5445,
+            "type": "area",
+            "location_type": "area",
+            "area_type": "W",
+            "_geoloc": {
+                "lat": 47.8156803,
+                "lng": -123.1102013
+            },
+            "trails_count": 27,
+            "state_name": "Washington",
+            "ID": 10150984,
+            "slug": "parks/us/washington/buckhorn-wilderness",
+            "name": "Buckhorn Wilderness",
+            "type_label": "Park",
+            "location_label": "Washington, United States",
+            "objectID": "area-10150984",
+            "has_applicable_trails": true,
+            "display_locations": [
+                "map"
+            ]
+        },
+        {
+            "popularity": 103.6303,
+            "type": "area",
+            "location_type": "area",
+            "area_type": "W",
+            "_geoloc": {
+                "lat": 47.5552206,
+                "lng": -123.2752988
+            },
+            "trails_count": 4,
+            "state_name": "Washington",
+            "ID": 10117661,
+            "slug": "parks/us/washington/mount-skokomish-wilderness",
+            "name": "Mount Skokomish Wilderness",
+            "type_label": "Park",
+            "location_label": "Washington, United States",
+            "objectID": "area-10117661",
+            "has_applicable_trails": true,
+            "display_locations": [
+                "map"
+            ]
+        },
+        {
+            "popularity": 103.2245,
+            "type": "area",
+            "location_type": "area",
+            "area_type": "W",
+            "_geoloc": {
+                "lat": 47.6875595,
+                "lng": -123.0967835
+            },
+            "trails_count": 4,
+            "state_name": "Washington",
+            "ID": 10118938,
+            "slug": "parks/us/washington/the-brothers-wilderness",
+            "name": "The Brothers Wilderness",
+            "type_label": "Park",
+            "location_label": "Washington, United States",
+            "objectID": "area-10118938",
+            "has_applicable_trails": true,
+            "display_locations": [
+                "map"
+            ]
+        },
+        {
+            "popularity": 101.6987,
+            "type": "area",
+            "location_type": "area",
+            "area_type": "T",
+            "_geoloc": {
+                "lat": 47.5714059,
+                "lng": -122.8048187
+            },
+            "trails_count": 10,
+            "state_name": "Washington",
+            "ID": 10159329,
+            "slug": "parks/us/washington/green-mountain-state-forest",
+            "name": "Green Mountain State Forest",
+            "type_label": "Park",
+            "location_label": "Washington, United States",
+            "objectID": "area-10159329",
+            "has_applicable_trails": true,
+            "display_locations": [
+                "map"
+            ]
+        },
+        {
+            "popularity": 101.5717,
+            "type": "area",
+            "location_type": "area",
+            "area_type": "C",
+            "_geoloc": {
+                "lat": 47.58001,
+                "lng": -122.71781
+            },
+            "trails_count": 2,
+            "state_name": "Washington",
+            "ID": 10164626,
+            "slug": "parks/us/washington/ueland-tree-farm",
+            "name": "Ueland Tree Farm",
+            "type_label": "Park",
+            "location_label": "Washington, United States",
+            "objectID": "area-10164626",
+            "has_applicable_trails": true,
+            "display_locations": [
+                "map"
+            ]
+        },
+        {
+            "popularity": 101.3197,
+            "type": "area",
+            "location_type": "area",
+            "area_type": "P",
+            "_geoloc": {
+                "lat": 48.1668253,
+                "lng": -123.1469723
+            },
+            "trails_count": 2,
+            "state_name": "Washington",
+            "ID": 10186725,
+            "slug": "parks/us/washington/dungeness-national-wildlife-refuge",
+            "name": "Dungeness National Wildlife Refuge",
+            "type_label": "Park",
+            "location_label": "Washington, United States",
+            "objectID": "area-10186725",
+            "has_applicable_trails": true,
+            "display_locations": [
+                "map"
+            ]
+        },
+        {
+            "popularity": 101.2419,
+            "type": "area",
+            "location_type": "area",
+            "area_type": "C",
+            "_geoloc": {
+                "lat": 48.1588046,
+                "lng": -123.6993979
+            },
+            "trails_count": 5,
+            "state_name": "Washington",
+            "ID": 10149224,
+            "slug": "parks/us/washington/salt-creek-recreation-area",
+            "name": "Salt Creek Recreation Area",
+            "type_label": "Park",
+            "location_label": "Washington, United States",
+            "objectID": "area-10149224",
+            "has_applicable_trails": true,
+            "display_locations": [
+                "map"
+            ]
+        },
+        {
+            "popularity": 100.7555,
+            "type": "area",
+            "location_type": "area",
+            "area_type": "O",
+            "_geoloc": {
+                "lat": 47.6100108,
+                "lng": -122.9075179
+            },
+            "trails_count": 1,
+            "state_name": "Washington",
+            "ID": 10161461,
+            "slug": "parks/us/washington/guillemot-cove-nature-preserve",
+            "name": "Guillemot Cove Nature Preserve",
+            "type_label": "Park",
+            "location_label": "Washington, United States",
+            "objectID": "area-10161461",
+            "has_applicable_trails": true,
+            "display_locations": [
+                "map"
+            ]
+        },
+        {
+            "popularity": 100.1148,
+            "type": "area",
+            "location_type": "area",
+            "area_type": "S",
+            "_geoloc": {
+                "lat": 47.6484694,
+                "lng": -122.8456252
+            },
+            "trails_count": 2,
+            "state_name": "Washington",
+            "ID": 10115674,
+            "slug": "parks/us/washington/scenic-beach-state-park",
+            "name": "Scenic Beach State Park",
+            "type_label": "Park",
+            "location_label": "Washington, United States",
+            "objectID": "area-10115674",
+            "has_applicable_trails": true,
+            "display_locations": [
+                "map"
+            ]
+        },
+        {
+            "popularity": 99.185,
+            "type": "area",
+            "location_type": "area",
+            "_geoloc": {
+                "lat": 47.663025,
+                "lng": -122.7580464
+            },
+            "trails_count": 1,
+            "state_name": "Washington",
+            "ID": 10162878,
+            "slug": "parks/us/washington/anderson-landing-preserve",
+            "name": "Anderson Landing Preserve",
+            "type_label": "Park",
+            "location_label": "Washington, United States",
+            "objectID": "area-10162878",
+            "has_applicable_trails": true,
+            "display_locations": [
+                "map"
+            ]
+        }
+    ]
+}

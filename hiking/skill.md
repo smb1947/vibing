@@ -15,17 +15,17 @@ description: |
 
 ## Overview
 
-Two-phase agentic workflow that replaces an hour of manual research with a 90-second interaction.
+An agentic workflow that replaces an hour of manual research with a 90-second interaction. It does it in 2 phases:
 
-- **Phase 1**: Extract trail candidates from AllTrails via Chrome (or fallback)
-- **Phase 2**: Layer real-time weather, snow, road, and history intelligence AllTrails can't provide
+- **Phase 1**: Extract trail candidates from AllTrails via Chrome (or fallback to web search by building a query from user preferences)
+- **Phase 2**: Layer real-time weather, snow, road, and history intelligence from various sources that AllTrails doesn't provide
 
-**Hike log**: `references/hike-log.md`
 **PRD reference**: `references/PRD - Trail Picker.md`
-
 ---
 
 ## Step 1: Load Hike History
+
+**Hike log**: `references/hike-log.md`
 
 Read the hike log at the path above. If it exists, extract:
 

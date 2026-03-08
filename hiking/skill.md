@@ -11,14 +11,18 @@ description: |
   "find trails", "plan Saturday hike", "trail picker", or discusses weekly hiking planning.
 ---
 
-# Trail Picker — Agentic Hike Research Assistant
+# Agentic Trail Researcher
 
 ## Overview
 
-An agentic workflow that replaces an hour of manual research with a 90-second interaction. It does it in 2 phases:
+An agentic workflow that replaces an hour of manual research with a 5 mins of interaction. It operates in 6 steps:
 
-- **Phase 1**: Extract trail candidates from AllTrails via Chrome (or fallback to web search by building a query from user preferences)
-- **Phase 2**: Layer real-time weather, snow, road, and history intelligence from various sources that AllTrails doesn't provide
+1. **Load Hike History**: Extract past hikes for exclusions and variety ranking.
+2. **Gather Inputs**: Collect AllTrails filters and user preferences.
+3. **Extract Candidates**: Pull 8-12 trail candidates from AllTrails.
+4. **Condition Research**: Use parallel subagents to check weather, snow, roads, trail status, and hazards.
+5. **Hard Filters**: Exclude trails that are unsafe or inaccessible.
+6. **Rank & Select**: Score surviving trails based on weather, conditions, and variety.
 
 **PRD reference**: `references/PRD - Trail Picker.md`
 ---
@@ -46,7 +50,7 @@ All configurable values follow this precedence (highest → lowest):
 
 1. **User-stated preferences** — Anything the user explicitly says in the current session overrides everything else. If the user says "target 2000 ft," ignore hike-log progression and defaults.
 2. **Hike-log derived values** — Exclusion list, progression baseline, region/type history from Step 1. Used when the user doesn't specify a preference.
-3. **Default values** — Hardcoded fallbacks (e.g., 500–1000 ft target, 5 hr max duration, 3 hr max drive). Used only when both user input and hike-log are silent.
+3. **Default values** — Hardcoded fallbacks (e.g., 500–1000 ft target, 3 hr max drive). Used only when both user input and hike-log are silent.
 
 This hierarchy applies to all configurable parameters: elevation targets, duration limits, drive time, region preferences, trail exclusions, and difficulty.
 
@@ -54,11 +58,14 @@ Use AskUserQuestion to collect:
 
 ### Required
 
-- **AllTrails filtered URL**: User applies their own filters on alltrails.com, then pastes the resulting URL. All filter state is encoded in query params.
+- **JSON File Path**: User must provide a local path to a JSON file containing extracted trail candidates from AllTrails.
+  - **Immediate Action**: As soon as this path is provided, read the JSON file and extract the top-level `url` key. This URL contains the query parameters representing the user's active filters.
+
+*If the JSON file path is not provided, do not proceed with the workflow.*
 
 ### AllTrails Filter Reference
 
-The following filters are available on the AllTrails Explore page. When parsing the user's URL, recognize these query param dimensions to understand what the user cares about:
+The following filters are available on the AllTrails Explore page. When parsing the URL embedded within the user's JSON file, recognize these query param dimensions to understand what the user cares about:
 
 | Category | Options | URL param hint |
 |---|---|---|
@@ -79,14 +86,13 @@ Filters use **AND logic** — a trail must match ALL active filters to appear. W
 
 ### Optional Input (Ask with Default)
 
-- **Hike date**: Default = next Saturday. Calculate with: `date -v+sat +%Y-%m-%d` (macOS). *Ask user to confirm or change.*
+- **Hike date**: Default = next Saturday. Calculate using your standard date tools or a cross-platform command (e.g. `python3 -c "from datetime import date, timedelta; d=date.today(); print(d + timedelta(days=(5-d.weekday()+7)%7 or 7))"`). *Ask user to confirm or change.*
 
 ### Informational Defaults (Calculate & Display Only — Do NOT Ask)
 
 Output these derived values so the user is aware, but **proceed immediately** without asking for confirmation or input on them.
 
 - **Past hikes**: Auto-populated from hike log.
-- **Max duration**: Default 5 hours
 - **Target elevation gain**: Default auto-calculated (most recent gain + 200–500 ft)
 - **Max drive time**: Default 3 hours one-way from Greenlake
 
@@ -106,7 +112,7 @@ Max duration: [X] hrs
 Target elevation gain: [XXX–XXX] ft (from hike log progression / default / user override)
 Max drive time: [X] hrs from Greenlake
 
-From AllTrails URL:
+From JSON URL:
   - Difficulty: [Easy/Moderate/Hard/Strenuous]
   - Distance: [X–X] mi
   - Elevation range: [XXX–XXX] ft
@@ -118,13 +124,15 @@ From AllTrails URL:
 Exclusions:
   - Previously hiked: [Trail 1, Trail 2, ...]
   - Over-represented regions: [Region A (X recent hikes), Region B (X recent hikes)]
+
+✓ Step 2 completed in 0m 15s
 ```
 
-This output should be **concise** and only show non-default values. If the user didn't apply a filter (e.g., no difficulty filter in URL), omit that line.
+This output should be **concise** and only show non-default values. If the user didn't apply a filter (e.g., no difficulty filter in the JSON data), omit that line.
 
 ---
 
-## Step 3: Phase 1 — Extract Trail Candidates
+## Step 3:
 
 **Cost discipline (always on):**
 
@@ -132,138 +140,147 @@ This output should be **concise** and only show non-default values. If the user 
 - Return structured fields only (no long prose) until final presentation.
 - Cap Phase 1 candidate set to **6 trails max** after initial extraction and quick pruning.
 
-### Primary: Claude in Chrome
+### Primary: Read JSON File
 
-The user must be logged into AllTrails in their Chrome browser.
+Extract trail candidates by reading the JSON file path provided by the user in Step 2.
 
-1. Call `mcp__Claude_in_Chrome__tabs_context_mcp` with `createIfEmpty: true` to get tab context
-2. Call `mcp__Claude_in_Chrome__tabs_create_mcp` to open a new tab
-3. Navigate to the AllTrails URL using `mcp__Claude_in_Chrome__navigate`
-4. Wait 3 seconds for page load
-5. Use `mcp__Claude_in_Chrome__read_page` and `mcp__Claude_in_Chrome__get_page_text` to extract listings
+1. Read the provided JSON file.
+2. Parse the trail listings to extract:
+   - Trail name
+   - Distance (miles)
+   - Elevation gain (feet)
+   - Difficulty (Easy / Moderate / Hard / Strenuous)
+   - Star rating + review count
+   - Location / region
+   - Direct AllTrails URL
+3. Print the first 10 trails from the JSON file to the user.
+4. Use these 10 trails as your candidate set for Phase 2.
 
-For each trail, capture:
+*Do not perform any web searches or browser automation to find trails.*
 
-- Trail name
-- Distance (miles, round-trip)
-- Elevation gain (feet)
-- Difficulty (Easy / Moderate / Hard / Strenuous)
-- Star rating + review count
-- Location / region
-- Attraction tags (waterfall, lake, views, etc.)
-- Direct AllTrails URL
+### Step 3 Expected Output
 
-**Extraction target: 8-12 raw candidates, then prune to top 6** by:
+```text
+Trail Candidates Extracted (8 trails):
 
-1. AllTrails rating/review strength
-2. Fit to URL filters (distance/elevation/difficulty)
-3. Rough drive-time feasibility
+Source: user_provided_trails.json
 
-If fewer than 6 are available, continue with what exists.
+1. Lake Ingalls via Ingalls Way Trail
+   - 9.5 mi | 2,600 ft gain | Hard | 4.8★ (1,234 reviews)
+   - Region: East Cascades (Cle Elum area)
+   
+2. Mount Townsend Trail
+   - 8.2 mi | 2,850 ft gain | Moderate | 4.7★ (892 reviews)
+   - Region: Olympics (Quilcene area)
 
-### If Chrome Fails
+... (6 more trails)
 
-If Chrome MCP tools are unavailable, login is required, or extraction fails:
+Next: Grouping trails by region for condition research...
 
-**Fallback A — User pastes data**: Ask user to copy trail listings from their browser. Accept any format (names only is fine — agent can WebSearch for details).
-
-**Fallback B — WebSearch discovery**: Parse the AllTrails URL query params to understand filters (difficulty, elevation range, region bounds), then:
-
+✓ Step 3 completed in 0m 22s
 ```
-WebSearch: "best [difficulty] hiking trails [region] [distance range] alltrails.com"
-WebSearch: "top rated moderate hikes near Snoqualmie Pass 6-10 miles"
-```
-
-Extract trail candidates from search results.
 
 ---
 
-## Step 4: Phase 2 — Condition Research (Parallel Subagents)
+## Step 4: Condition Research (Region-Based Subagents)
 
-**Critical: Use staged research to reduce token usage.**
+**Critical: Use region-based research to reduce token usage and redundant searches.** Trails in the same area share the same weather, snow levels, and regional hazards.
 
 ### Condition Priority Order (highest to lowest)
 
-1. **Hazards**
-2. **Weather**
-3. **Road conditions**
-4. **Snow level**
-5. **Trail conditions**
-6. **Logistics**
+1. **Hazards (Regional)**
+2. **Weather (Regional)**
+3. **Snow level (Regional)**
+4. **Road conditions (Trail-specific)**
+5. **Trail conditions (Trail-specific)**
+6. **Logistics (Trail-specific)**
 
-Research each trail in this order and **stop researching that trail immediately** when a condition is "too bad" (hard reject).
+### Step 4A — Regional Environmental Checks
 
-### Stage 4A — Lightweight checks for up to 6 trails
-
-For each trail, gather only:
-
-1. HAZARD SNAPSHOT — regional avalanche/advisory status
-2. WEATHER SNAPSHOT — precip %, temp range, wind
-
-Use this fast pass to score and shortlist to top **3-4 finalists**.
-
-Road and snow checks are deferred to Stage 4B for finalists to reduce token and search-call usage.
-
-### Stage 4B — Deep checks for finalists only (max 4 trails)
-
-Run full condition research only for finalists:
-
-Each subagent prompt:
+1. **Group candidates by region/area** (e.g., "North Bend", "Snoqualmie Pass", "Mountain Loop Hwy").
+2. **Spawn one subagent per unique area** to research the environmental baselines:
 
 ```
-Research real-time conditions for "[Trail Name]" in [Region] for hiking on [Target Date].
-Run checks in strict order and stop on first hard reject.
-
-1. HAZARDS — Search: "NWAC avalanche forecast [region]" and "NWS weather advisory [region]"
-   Hard reject if: active avalanche warning OR severe weather advisory for target window.
-   Return: hazards_status, source, hard_reject (true/false), reject_reason
-
+Research conditions for the [Region] area for hiking on [Target Date].
+1. HAZARDS — Search: "NWAC avalanche forecast [Region]" and "NWS weather advisory [Region]"
 2. WEATHER — Search: "NWS forecast [nearest town/area] [Target Date]"
-   Reuse Stage 4A weather if still valid for this trail area; re-query only if unavailable or clearly mismatched.
-   Hard reject if any: precip_pct >= 80 OR wind_mph >= 35 OR temp_high_f < 20.
-   Return: high_f, low_f, precip_pct, wind_mph, summary, hard_reject, reject_reason
+3. SNOW LEVEL — Search: "NWAC snow level forecast Washington Cascades [Target Date]"
 
-3. ROAD CONDITIONS — Search: "WSDOT [highway/road to trailhead] road conditions"
+Return: avalanche_risk, weather_summary, precip_pct, wind_mph, high_f, low_f, snow_level_ft, hard_reject (true/false if severe weather/avalanche), reject_reason
+```
+
+**Apply these regional results to all trails in that area.**
+- If the region hard-rejects (e.g., active avalanche warning or 90% rain), **drop all trails in that region immediately**.
+- If a trail's trailhead elevation is > (regional snow level + 500 ft), drop it.
+
+Shortlist the surviving trails to the top **3-4 finalists**.
+
+### Step 4B — Trail-Specific Checks (Finalists Only)
+
+For the surviving 3-4 finalists, run a highly targeted subagent to check local access:
+
+```
+Research access for "[Trail Name]" in [Region]:
+1. ROAD CONDITIONS — Search: "WSDOT [highway/road to trailhead] road conditions"
    Hard reject if: road closed/gated/washout.
-   Chain requirement is NOT a hard reject; capture it as an access-risk signal for ranking/output.
-   Return: road_status, chain_required, sedan_friendly, source, hard_reject, reject_reason, access_risk
+   Return: road_status, chain_required, sedan_friendly
+2. TRAIL CONDITIONS — Search: "WTA trip report [Trail Name] site:wta.org" (last 14 days)
+   Hard reject if: latest credible report says trail closed/impassable.
+   Return: surface, latest_report_date
+3. LOGISTICS — Search: "[Trail Name] parking pass required"
+   Return: pass_type
 
-4. SNOW LEVEL — Search: "NWAC snow level forecast Washington Cascades [Target Date]"
-   Hard reject if: trailhead_elevation_ft > snow_level_ft + 500 (unless user explicitly wants snow).
-   Marginal (not reject): trailhead_elevation_ft within 0-500 ft above snow_level_ft.
-   Return: snow_level_ft, trailhead_elevation_ft, snow_risk, hard_reject, reject_reason
-
-5. TRAIL CONDITIONS — Search: "WTA trip report [Trail Name] site:wta.org"
-   Find reports from last 14 days.
-   Hard reject if latest credible report says trail closed/impassable or heavy snow/ice requiring technical gear.
-   Return: surface, latest_report_date, closure_signal, road_mentions, hard_reject, reject_reason
-
-6. LOGISTICS — Search: "[Trail Name] parking pass required" and "[Trail Name] wilderness group size limit"
-   No hard reject unless explicit legal access prohibition.
-   Return: pass_type, group_limit, permit_constraints, hard_reject, reject_reason
-
-Return structured output only. If a step hard-rejects, stop remaining steps for this trail and return partial fields.
+Return structured output only. Stop on first hard reject.
 ```
 
-**Also run one shared subagent** for regional data that applies to all trails:
-
-```
-Search for NWAC Cascades snow level forecast and NWS regional weather overview for [Target Date].
-Compare west-side Cascades vs east-side Cascades precipitation outlook.
-Return: snow level elevation, west-side precip%, east-side precip%, any severe advisories.
-```
-
-Compile all subagent results into a structured dataset per trail.
+Compile the regional (4A) and specific (4B) results into a complete dataset per trail.
 
 **Execution caps (hard limits):**
 
-- `max_candidates_phase2 = 6`
+- `max_candidates_phase2 = 10`
+- `max_regions_researched = 4`
 - `max_finalists_deep_research = 4`
-- `max_parallel_subagents = 4`
-- `max_search_calls_total = 20`
+- `max_search_calls_total = 15`
 - `max_tokens_total` per run: set before execution and stop when reached
 
 If a cap is reached, stop deeper research and continue with best available data + confidence flags.
+
+### Step 4 Expected Output
+
+```text
+Condition Research Complete:
+
+Step 4A: Regional Environment
+  ✓ East Cascades (Cle Elum area): 
+    - Weather: Clear, High 65F, Low 42F, Wind 5mph
+    - Snow level forecast: 4,000 ft
+    - Hazards: None
+  ✓ Olympics (Quilcene area): 
+    - Weather: 20% precip, High 55F, Low 38F
+    - Snow level forecast: 3,500 ft
+    - Hazards: None
+  ✗ West Cascades (Snoqualmie Pass): Active avalanche warning → Region dropped
+
+Step 4B: Trail-Specific Access
+Finalists (4 trails passed):
+  ✓ Lake Ingalls 
+    - Road: Clear, paved, sedan-friendly
+    - Trail: Clear, dry (WTA 05/10)
+    - Pass: NW Forest Pass
+  ✓ Mount Townsend 
+    - Road: Clear, gravel, sedan-friendly
+    - Trail: Light snow, passable (WTA 05/12)
+    - Pass: None
+
+Rejected (4 trails):
+  ✗ Snow Lake — Region dropped (Avalanche hazard)
+  ✗ Mount Pilchuck — Road closed (WSDOT gate at mile 7)
+  ... (2 more)
+
+Next: Applying hard filters and ranking...
+
+✓ Step 4 completed in 1m 45s
+```
 
 ---
 
@@ -296,6 +313,25 @@ If a cap is reached, stop deeper research and continue with best available data 
 - Weather extremes: precip >= 80%, wind >= 35 mph, or daytime high < 20F
 - Credible recent report indicates trail closed/impassable or heavy snow/ice requiring technical gear
 
+### Step 5 Expected Output
+
+```text
+Hard Filters Applied:
+
+Survivors (3 trails):
+  ✓ Lake Ingalls
+  ✓ Mount Townsend
+  ✓ Oyster Dome
+
+Rejected (1 trail):
+  ✗ Colchuck Lake — Drive time 3.2 hrs (exceeds 3 hr max)
+    Calculation: Greenlake to Leavenworth = 3.2 hrs
+
+Next: Ranking survivors...
+
+✓ Step 5 completed in 0m 12s
+```
+
 ---
 
 ## Step 6: Rank & Select Top 3
@@ -306,9 +342,8 @@ Score each surviving trail (0–100 scale per factor):
 
 | Factor | Weight | Scoring |
 |---|---|---|
-| **Weather fit** | 40% | `100 - (precip% * 0.7) - wind_penalty - temp_penalty`. West Cascades rainy (>60%) but east clear (<30%) → boost east trails +20. Rain everywhere → boost tree-cover trails +15. |
-| **Trail condition** | 25% | Clear/dry=100, Light snow (passable)=80, Mud=70, Moderate snow=60, Unverified=50, Heavy snow/ice=30 |
-| **Elevation progression** | 20% | Target = last hike gain + 350ft (or 750ft if no history). Score = `100 - abs(trail_gain - target) / 5` |
+| **Weather fit** | 50% | `100 - (precip% * 0.7) - wind_penalty - temp_penalty`. West Cascades rainy (>60%) but east clear (<30%) → boost east trails +20. Rain everywhere → boost tree-cover trails +15. |
+| **Trail condition** | 35% | Clear/dry=100, Light snow (passable)=80, Mud=70, Moderate snow=60, Unverified=50, Heavy snow/ice=30 |
 | **Region variety** | 10% | Region in last 5 hikes 2+ times → -20. Different region from last hike → +10 |
 | **Type variety** | 5% | Last 3 hikes same type (lake/ridge/waterfall) and this matches → -15. Different type → +10 |
 
@@ -316,7 +351,7 @@ Score each surviving trail (0–100 scale per factor):
 
 1. Sort by weighted total score descending
 2. Pick #1 (highest score)
-3. Pick #2 and #3 ensuring: at least 2 different regions across the 3 picks, and elevation diversity (one near target, one ~200ft below, one ~200ft above)
+3. Pick #2 and #3 ensuring: at least 2 different regions across the 3 picks
 4. Ties → prefer shorter drive time
 
 **Access-risk adjustment (applied before final sort):**
@@ -329,6 +364,27 @@ Score each surviving trail (0–100 scale per factor):
 
 If 3 trails already satisfy safety filters and have strong evidence coverage, skip remaining optional searches and finalize.
 
+### Step 6 Expected Output
+
+```text
+Ranking Results:
+
+1. Lake Ingalls — 87.3 points
+   - Weather fit: 95/100 (clear, east-side advantage)
+   - Trail condition: 100/100 (clear/dry per WTA 05/10)
+   - Region variety: 80/100 (new region)
+   - Type variety: 90/100 (ridge trail)
+   
+... (Top 3 listed)
+
+Selection ensures:
+  ✓ 3 different regions (East Cascades, Olympics, Puget Sound)
+
+Next: Preparing detailed output...
+
+✓ Step 6 completed in 0m 05s
+```
+
 ---
 
 ## Step 7: Iterate If < 3 Survive
@@ -339,9 +395,9 @@ If 3 trails already satisfy safety filters and have strong evidence coverage, sk
 - Drive time: 3hr → 3.6hr
 - Re-apply filters to original candidate set
 
-**Round 2**: Ask user for a broader AllTrails URL with relaxed filters. If provided, re-run from Step 3.
+**Round 2**: Pull the *next* batch of up to 10 trails from the original JSON file (e.g., trails 11-20) and re-run the research pipeline from Step 4.
 
-**Round 3**: Present what's available with note: "Limited options this week due to [primary constraint]. Consider [suggestion]."
+If < 3 trails survive after Round 2, **stop iterating** and present the best available options (even if 0-2 trails) with the note: "Limited options this week due to [primary constraint]. Consider adjusting filters for next time."
 
 ---
 
@@ -376,31 +432,33 @@ If 3 trails already satisfy safety filters and have strong evidence coverage, sk
 
 ### Why This Trail on This Day
 [2-3 sentences: (a) how it matches filter preferences, (b) why weather/conditions favor it
-on this specific date vs alternatives, (c) how it fits the elevation progression arc]
+on this specific date vs alternatives, (c) how it adds variety to recent hikes]
 
 **AllTrails**: [URL]
 ```
 
 ### Rejected trails
 
-```
+```text
 ## Trails Considered But Excluded
 
-| Trail | Reason | Detail |
-|---|---|---|
-| [Name] | Snow level | Trailhead 3800ft, snow level 2800ft |
-| [Name] | Road closed | WSDOT: SR-20 closed until April |
-| [Name] | Previously hiked | Completed 2026-01-18 |
+| Trail | Region | Reason | Detail |
+|---|---|---|---|
+| [Name] | [Region] | Snow level | Trailhead 3800ft, snow level 2800ft |
+| [Name] | [Region] | Road closed | WSDOT: SR-20 closed until April |
+| [Name] | [Region] | Previously hiked | Completed 2026-01-18 |
 ```
 
 ### End with
 
-```
+```text
 Want to adjust and re-search? Options:
 - Relax filters and retry
 - Change target date
 - Override elevation target
-- Provide broader AllTrails URL
+- Provide a new JSON file with broader filters
+
+✓ Step 8 completed in 0m 18s
 ```
 
 ---
@@ -422,9 +480,7 @@ If yes:
 
 | Failure | Action |
 |---|---|
-| Chrome MCP unavailable | Use Fallback A (user paste) or B (WebSearch) |
-| AllTrails needs login | Tell user to log into AllTrails in Chrome, retry |
-| < 5 AllTrails results | Warn user, ask for broader URL |
+| < 5 AllTrails results | Warn user, ask for a new JSON file with broader filters |
 | Weather search fails | Note "unavailable" in output, rank without weather (other factors rescaled) |
 | No WTA trip reports | Flag "Unverified — check WTA before going" (don't exclude) |
 | NWAC unavailable | Warn: "Snow data unavailable — check NWAC manually" |
@@ -441,7 +497,6 @@ If yes:
 |---|---|
 | **Read / Write** | Hike log persistence |
 | **Bash** | Date calculation (`date -v+sat +%Y-%m-%d`) |
-| **Claude in Chrome** (`mcp__Claude_in_Chrome__*`) | AllTrails browsing with user's session |
 | **WebSearch** | NWS weather, NWAC snow, WSDOT roads, WTA trip reports |
 | **WebFetch** | Specific WTA/NWS/WSDOT pages when WebSearch is insufficient |
 | **Task** (subagents, `general-purpose` type) | Parallel per-trail condition research |
@@ -457,6 +512,12 @@ Expand into narrative prose only in Step 8 output.
 
 ## Caching Guidance
 
-- Cache weather/snow/road/trip-report summaries per `(trail, target_date)` for 12-24 hours.
-- Reuse cached results during reruns in the same planning session/week.
-- Refresh only fields likely to change quickly (e.g., hazards, road incidents).
+- **Regional Data**: Cache weather, snow level, and hazard summaries per `(region, target_date)` for 12-24 hours.
+- **Trail-Specific Data**: Cache road conditions and trip-report summaries per `(trail, target_date)` for 12-24 hours.
+- Reuse cached results during reruns in the same planning session/week to avoid duplicate searches.
+- Refresh only fields likely to change quickly (e.g., severe weather advisories, sudden road closures).
+
+## Execution Time Tracking
+
+- **After every step**, print the summary output of the step.
+- Track and append the **time taken to complete the step** directly after the step's output (e.g., `✓ Step 4 completed in 1m 45s`).

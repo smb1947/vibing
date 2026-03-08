@@ -87,21 +87,6 @@ def score_trail_condition(c: TrailConditions) -> float:
     return float(SURFACE_SCORES.get(c.trail_surface, 50))
 
 
-def score_elevation_progression(c: TrailConditions, history: HikeHistory) -> float:
-    """
-    Elevation progression — 20% weight.
-    Target = last gain + 350 ft (or 750 ft if no history).
-    Score = 100 - |trail_gain - target| / 5, floored at 0.
-    """
-    if history.last_gain_ft is not None:
-        target = history.last_gain_ft + 350
-    else:
-        target = 750
-
-    deviation = abs(c.elevation_gain_ft - target)
-    return max(0.0, 100.0 - deviation / 5)
-
-
 def score_region_variety(c: TrailConditions, history: HikeHistory) -> float:
     """
     Region variety — 10% weight.
@@ -145,9 +130,8 @@ def score_type_variety(c: TrailConditions, history: HikeHistory) -> float:
 # ---------------------------------------------------------------------------
 
 WEIGHTS = {
-    "weather":              0.40,
-    "trail_condition":      0.25,
-    "elevation_progression": 0.20,
+    "weather":              0.50,
+    "trail_condition":      0.35,
     "region_variety":       0.10,
     "type_variety":         0.05,
 }
@@ -166,7 +150,6 @@ def rank_trail(name: str, conditions: TrailConditions, history: HikeHistory) -> 
     scores = {
         "weather":               score_weather(conditions),
         "trail_condition":       score_trail_condition(conditions),
-        "elevation_progression": score_elevation_progression(conditions, history),
         "region_variety":        score_region_variety(conditions, history),
         "type_variety":          score_type_variety(conditions, history),
     }

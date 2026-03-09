@@ -1,0 +1,6 @@
+Idea 4: AllTrails AI Copilot - Big Idea x Agentic AI 
+Problem: AllTrails currently functions mainly as a static trail directory. Users seeking to assess real-time trail safety such as snow conditions, road closures, or weather hazards must manually check multiple external websites, often spending up to 4 hours to gather the information they need. This “tab fatigue” frustrates users, leads to app abandonment, and reduces overall engagement. 
+
+AI Solution: An agentic assistant streamlines trail planning by first filtering trails based on user preferences (distance, elevation, difficulty). Parallel sub-agents then fetch live weather, hazards, and closure data to produce a ranked list of trails with clear safety reasoning and recommendations. 
+
+Metrics: Reduce trip planning time from 4 hours to 5 minutes, increase customer satisfaction (CSAT) by 30%, and improve app retention by providing real-time, actionable guidance. 

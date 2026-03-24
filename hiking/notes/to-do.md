@@ -8,3 +8,4 @@
 4. hard and soft filters for area research
 5. trail, region, reason, details
 6. o/p evaluation -> verify if the output matches the user's preferences
+7. how to make agents honor the constraints (time, token limit, process, etc)

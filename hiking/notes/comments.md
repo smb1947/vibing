@@ -298,3 +298,13 @@ add "`✓ Step 4 completed in 1m 45s`" after each step output.
 
 c63:
 add reasonable execution time limit on each step. 
+
+c64:
+update read me to include the following steps:
+
+`Open this folder in codex/claude code/gemini cli..
+run hiking/SKILL.md "hiking/demos/mar14 response.json
+provide the date and let the agent run
+
+
+Note: monitor your terminal as you might have to provide permission for agents to run web search and python commands. It usually takes upto 5mins to run successfully. If it takes more time, please cancel the execution.`

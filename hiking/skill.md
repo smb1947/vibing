@@ -521,3 +521,17 @@ Expand into narrative prose only in Step 8 output.
 
 - **After every step**, print the summary output of the step.
 - Track and append the **time taken to complete the step** directly after the step's output (e.g., `✓ Step 4 completed in 1m 45s`).
+
+### Step Time Limits
+
+| Step | Goal | Target Time | Max Time (before abort) |
+|---|---|---|---|
+| **Step 1** | Load History | 15s | 45s |
+| **Step 2** | Gather Inputs | 30s | 90s |
+| **Step 3** | Extract Candidates | 45s | 2m |
+| **Step 4** | Condition Research | 3m | 6m |
+| **Step 5** | Hard Filters | 15s | 45s |
+| **Step 6** | Rank & Select | 15s | 45s |
+| **Step 8** | Present Output | 45s | 2m |
+
+*If a step exceeds the Max Time, the agent should consider it a failure/hang, terminate the current tool call, and notify the user or attempt a retry.*

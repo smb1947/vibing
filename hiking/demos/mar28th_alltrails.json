@@ -1,4 +1,6 @@
+
 {
+    "query": "https://www.alltrails.com/explore?b_br_lat=46.47010806682823&b_br_lng=-120.34110373064271&b_tl_lat=48.486708085038856&b_tl_lng=-124.75884352420275&sort=month_3",
     "summary": {
         "count": 500,
         "displayText": "500+ trails"

@@ -1,6 +1,6 @@
 # Vibing Project
 
-Personal workspace for Kritikal Adventures and other experiments.
+Personal workspace for hiking, fitness, and other experiments.
 
 ## Projects
 

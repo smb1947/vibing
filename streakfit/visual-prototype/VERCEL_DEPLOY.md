@@ -30,6 +30,8 @@ Set:
 
 The app-level `vercel.json` also includes the SPA rewrite to `index.html`.
 
+The app uses Vite, React, Tailwind CSS, and custom CSS for the character/theme system.
+
 ## Local Build Check
 
 From `prototype/visual-prototype`:

@@ -705,7 +705,7 @@ function App() {
 
   return (
     <main
-      className={`app theme-${motivation.id}`}
+      className={`app theme-${motivation.id} font-sans antialiased`}
       style={{
         "--guide": motivation.color,
         "--display-font": motivation.font,

@@ -154,29 +154,14 @@ button {
   gap: 6px;
 }
 
-.sample-menu-wrap {
-  position: relative;
-}
-
 .sample-menu {
-  position: absolute;
-  top: calc(100% + 8px);
-  right: 0;
-  z-index: 30;
   display: grid;
   width: min(380px, calc(100vw - 28px));
   max-height: min(72vh, 620px);
   gap: 8px;
-  overflow-y: auto;
-  padding: 10px;
-  border: 1px solid color-mix(in srgb, var(--guide) 18%, var(--line));
-  border-radius: 22px;
-  background:
-    linear-gradient(145deg, color-mix(in srgb, var(--theme-bg) 36%, white), white);
-  box-shadow: var(--shadow);
 }
 
-.sample-menu button {
+.sample-menu-item {
   display: grid;
   grid-template-columns: 48px minmax(0, 1fr);
   gap: 11px;
@@ -191,7 +176,8 @@ button {
   transition: transform 160ms ease, box-shadow 160ms ease, border-color 160ms ease;
 }
 
-.sample-menu button:hover {
+.sample-menu-item:hover,
+.sample-menu-item:focus {
   border-color: var(--sample);
   box-shadow: 0 14px 26px color-mix(in srgb, var(--sample) 14%, transparent);
   transform: translateY(-2px);

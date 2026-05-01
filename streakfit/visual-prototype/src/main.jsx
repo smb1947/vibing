@@ -45,6 +45,25 @@ import {
   Zap,
   Waves
 } from "lucide-react";
+import { Badge } from "./components/ui/badge";
+import { Button } from "./components/ui/button";
+import { Card } from "./components/ui/card";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger
+} from "./components/ui/dropdown-menu";
+import { Input as UiInput } from "./components/ui/input";
+import { Progress } from "./components/ui/progress";
+import {
+  Select as UiSelect,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue
+} from "./components/ui/select";
+import { Switch } from "./components/ui/switch";
 import "./styles.css";
 
 const STORAGE_KEY = "gym-prep-companion-react-v1";
@@ -745,7 +764,6 @@ function App() {
 }
 
 function TopBar({ screen, setScreen, canGoBack, goBack, loadSample, reset }) {
-  const [showSamples, setShowSamples] = useState(false);
   const tabs = [
     ["home", "Home", Target],
     ["motivation", "Why", Sparkles],
@@ -759,51 +777,49 @@ function TopBar({ screen, setScreen, canGoBack, goBack, loadSample, reset }) {
   return (
     <header className="topbar">
       <div className="brand-group">
-        <button className="back-button" onClick={goBack} disabled={!canGoBack} aria-label="Go back">
+        <Button className="back-button" variant="secondary" size="icon" onClick={goBack} disabled={!canGoBack} aria-label="Go back">
           <ChevronLeft size={19} />
-        </button>
-        <button className="brand-button" onClick={() => setScreen("start")}>
+        </Button>
+        <Button className="brand-button" variant="ghost" onClick={() => setScreen("start")}>
           <span className="brand-orb"><Dumbbell size={18} /></span>
           <span>StreakFit</span>
-        </button>
+        </Button>
       </div>
       <nav className="tabbar">
         {tabs.map(([id, label, Icon]) => (
-          <button className={screen === id ? "active" : ""} key={id} onClick={() => setScreen(id)}>
+          <Button className={screen === id ? "active" : ""} variant="ghost" size="sm" key={id} onClick={() => setScreen(id)}>
             <Icon size={17} />
             <span>{label}</span>
-          </button>
+          </Button>
         ))}
       </nav>
       <div className="top-actions">
-        <div className="sample-menu-wrap">
-          <button className="tiny-button" onClick={() => setShowSamples((current) => !current)}>Samples</button>
-          {showSamples && (
-            <div className="sample-menu">
-              {sampleDatasets.map((sample) => {
-                const SampleIcon = sample.icon;
-                return (
-                  <button
-                    key={sample.id}
-                    style={{ "--sample": sample.color }}
-                    onClick={() => {
-                      loadSample(sample.id);
-                      setShowSamples(false);
-                    }}
-                  >
-                    <span className="sample-icon"><SampleIcon size={18} /></span>
-                    <span className="sample-copy">
-                      <strong>{sample.label}</strong>
-                      <small>{sample.meta}</small>
-                      <span>{sample.description}</span>
-                    </span>
-                  </button>
-                );
-              })}
-            </div>
-          )}
-        </div>
-        <button className="tiny-button danger" onClick={reset}>Reset</button>
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <Button className="tiny-button" variant="secondary" size="sm">Samples</Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent className="sample-menu" align="end">
+            {sampleDatasets.map((sample) => {
+              const SampleIcon = sample.icon;
+              return (
+                <DropdownMenuItem
+                  className="sample-menu-item"
+                  key={sample.id}
+                  style={{ "--sample": sample.color }}
+                  onClick={() => loadSample(sample.id)}
+                >
+                  <span className="sample-icon"><SampleIcon size={18} /></span>
+                  <span className="sample-copy">
+                    <strong>{sample.label}</strong>
+                    <small>{sample.meta}</small>
+                    <span>{sample.description}</span>
+                  </span>
+                </DropdownMenuItem>
+              );
+            })}
+          </DropdownMenuContent>
+        </DropdownMenu>
+        <Button className="tiny-button danger" variant="destructive" size="sm" onClick={reset}>Reset</Button>
       </div>
     </header>
   );
@@ -835,9 +851,7 @@ function GuideCard({ motivation, screen, state }) {
       </div>
       {showOnboardingProgress && (
         <div className="guide-stepper" aria-label="Onboarding progress">
-          {Array.from({ length: 6 }, (_, index) => (
-            <span className={index + 1 <= currentStep ? "active" : ""} key={index} />
-          ))}
+          <Progress value={(currentStep / 6) * 100} />
         </div>
       )}
       <div className="guide-stats">
@@ -846,8 +860,8 @@ function GuideCard({ motivation, screen, state }) {
         <span><Activity size={15} /> {state.logs.length} logs</span>
       </div>
       <div className="guide-meta">
-        <span>{getCharacterEmoji(motivation.id)} {motivation.label}</span>
-        <span>✦ {motivation.tone}</span>
+        <Badge>{getCharacterEmoji(motivation.id)} {motivation.label}</Badge>
+        <Badge variant="outline">✦ {motivation.tone}</Badge>
       </div>
     </aside>
   );
@@ -901,7 +915,7 @@ function StartScreen({ userName, onSubmit }) {
       </div>
       <form className="name-card" onSubmit={onSubmit}>
         <Input label="What should your guide call you?" name="userName" defaultValue={userName || "Gymbro"} placeholder="Gymbro" />
-        <button className="primary">Continue <ArrowRight size={18} /></button>
+        <Button>Continue <ArrowRight size={18} /></Button>
       </form>
     </div>
   );
@@ -915,16 +929,17 @@ function MotivationScreen({ selected, onSelect }) {
         {motivations.map((motivation) => {
           const Icon = motivation.icon;
           return (
-            <button
+            <Button
               className={`motivation-card ${selected === motivation.id ? "selected" : ""}`}
               key={motivation.id}
               style={{ "--card": motivation.color }}
               onClick={() => onSelect(motivation.id)}
+              variant="ghost"
             >
               <span className="icon-badge"><Icon size={22} /></span>
               <strong>{motivation.label}</strong>
               <small>{motivation.guide}</small>
-            </button>
+            </Button>
           );
         })}
       </div>
@@ -943,21 +958,22 @@ function SlotsScreen({ selectedDays, setSelectedDays, onSubmit, slots, removeSlo
       <form className="slot-form" onSubmit={onSubmit}>
         <div className="day-pills">
           {days.map((day) => (
-            <button
+            <Button
               className={selectedDays.includes(day) ? "selected" : ""}
               type="button"
               key={day}
               onClick={() => toggleDay(day)}
+              variant="secondary"
             >
               {day}
-            </button>
+            </Button>
           ))}
         </div>
         <div className="input-row">
           <Input label="Time" name="time" type="time" defaultValue="07:00" />
           <Input label="Minutes" name="duration" type="number" defaultValue="60" min="10" />
           <Input label="Gym" name="gym" placeholder="IMA" />
-          <button className="primary" disabled={!selectedDays.length}>Add</button>
+          <Button disabled={!selectedDays.length}>Add</Button>
         </div>
       </form>
       <CardList empty="No gym slots yet.">
@@ -967,7 +983,7 @@ function SlotsScreen({ selectedDays, setSelectedDays, onSubmit, slots, removeSlo
               <strong>{fullDays[slot.day]} at {formatTime(slot.time)}</strong>
               <span>{slot.duration} min {slot.gym ? `at ${slot.gym}` : ""}</span>
             </div>
-            <button className="icon-action" onClick={() => removeSlot(slot.id)}><Trash2 size={16} /></button>
+            <Button className="icon-action" variant="ghost" size="icon" onClick={() => removeSlot(slot.id)}><Trash2 size={16} /></Button>
           </div>
         ))}
       </CardList>
@@ -989,7 +1005,7 @@ function PrepScreen({ items, addPrep, removePrep, onNext }) {
       <ScreenTitle eyebrow="Step 4" title="Build your prep ritual." subtitle="Capture what you want to pack or do. Reminders reuse this exact list." />
       <form className="custom-prep" onSubmit={submit}>
         <input value={custom} onChange={(event) => setCustom(event.target.value)} placeholder="Add your own: eat banana, fill bottle, pack straps" />
-        <button className="primary">Add</button>
+        <Button>Add</Button>
       </form>
       <div className="prep-chip-grid">
         {prepSuggestions.map((item) => (
@@ -1002,7 +1018,7 @@ function PrepScreen({ items, addPrep, removePrep, onNext }) {
           ))}
       </div>
       <div className="action-row">
-        <button className="primary" onClick={onNext}>Set reminders <ArrowRight size={18} /></button>
+        <Button onClick={onNext}>Set reminders <ArrowRight size={18} /></Button>
       </div>
     </div>
   );
@@ -1019,10 +1035,10 @@ function PrepChip({ label, selected, addPrep, removePrep, items }) {
   }
 
   return (
-    <button className={`prep-chip ${selected ? "selected" : ""}`} type="button" onClick={toggle}>
+    <Button className={`prep-chip ${selected ? "selected" : ""}`} variant="secondary" type="button" onClick={toggle}>
       <span><PrepItemIcon label={label} size={16} /></span>
       {label}
-    </button>
+    </Button>
   );
 }
 
@@ -1033,16 +1049,16 @@ function HomeScreen({ nextSlot, motivation, prepItems, completedLogs, logs, slot
     <div className="screen">
       <ScreenTitle eyebrow="Home" title="Next session, less friction." subtitle={motivation.line} />
       <div className="home-grid">
-        <button className="big-action" onClick={() => go("prep")}>
+        <Button className="big-action" variant="secondary" onClick={() => go("prep")}>
           <PackageCheck size={32} />
           <span>Prep list</span>
           <strong>{prepItems.length} items</strong>
-        </button>
-        <button className="big-action" onClick={() => go("tracker")}>
+        </Button>
+        <Button className="big-action" variant="secondary" onClick={() => go("tracker")}>
           <Activity size={32} />
           <span>Log session</span>
           <strong>{completedLogs.length} done</strong>
-        </button>
+        </Button>
       </div>
       <div className="next-card">
         <Clock3 size={24} />
@@ -1060,12 +1076,12 @@ function HomeScreen({ nextSlot, motivation, prepItems, completedLogs, logs, slot
       <div className="home-history">
         <div className="section-label">
           <span>Recent logs</span>
-          <button onClick={() => go("progress")}>View all</button>
+          <Button variant="secondary" size="sm" onClick={() => go("progress")}>View all</Button>
         </div>
         <CardList empty="No logs yet. Log your first session.">
           {recentLogs.map((log) => (
             <div className="log-card" key={log.id}>
-              <span className={log.went ? "status good" : "status miss"}>{log.went ? "Went" : "Missed"}</span>
+              <Badge variant={log.went ? "success" : "miss"}>{log.went ? "Went" : "Missed"}</Badge>
               <div>
                 <strong>{log.date}</strong>
                 <small>
@@ -1079,8 +1095,8 @@ function HomeScreen({ nextSlot, motivation, prepItems, completedLogs, logs, slot
         </CardList>
       </div>
       <div className="action-row">
-        <button className="secondary" onClick={() => go("reminders")}>Preview reminders</button>
-        <button className="secondary" onClick={() => go("slots")}>Edit slots</button>
+        <Button variant="secondary" onClick={() => go("reminders")}>Preview reminders</Button>
+        <Button variant="secondary" onClick={() => go("slots")}>Edit slots</Button>
       </div>
     </div>
   );
@@ -1093,10 +1109,9 @@ function RemindersScreen({ nextSlot, prepItems, motivation, userName, settings, 
       <div className="reminder-settings">
         <div className="reminder-setting-card">
           <label className="toggle-row">
-            <input
-              type="checkbox"
+            <Switch
               checked={settings.dayBefore}
-              onChange={(event) => updateSettings({ dayBefore: event.target.checked })}
+              onCheckedChange={(checked) => updateSettings({ dayBefore: checked })}
             />
             <span>Day-before reminder</span>
           </label>
@@ -1107,14 +1122,13 @@ function RemindersScreen({ nextSlot, prepItems, motivation, userName, settings, 
             value={settings.dayBeforeTime}
             onChange={(event) => updateSettings({ dayBeforeTime: event.target.value })}
           />
-          <button className="primary" type="button" onClick={() => testReminder("dayBefore")}>Test day-before</button>
+          <Button type="button" onClick={() => testReminder("dayBefore")}>Test day-before</Button>
         </div>
         <div className="reminder-setting-card">
           <label className="toggle-row">
-            <input
-              type="checkbox"
+            <Switch
               checked={settings.sameDay}
-              onChange={(event) => updateSettings({ sameDay: event.target.checked })}
+              onCheckedChange={(checked) => updateSettings({ sameDay: checked })}
             />
             <span>Same-day reminder</span>
           </label>
@@ -1129,12 +1143,12 @@ function RemindersScreen({ nextSlot, prepItems, motivation, userName, settings, 
               ["120", "2 hours before"]
             ]}
           />
-          <button className="primary" type="button" onClick={() => testReminder("sameDay")}>Test same-day</button>
+          <Button type="button" onClick={() => testReminder("sameDay")}>Test same-day</Button>
         </div>
       </div>
       <div className="action-row">
-        <button className="primary" onClick={() => go("tracker")}>Open tracker <ArrowRight size={18} /></button>
-        <button className="secondary" onClick={() => finishOnboarding("home")}>Go home</button>
+        <Button onClick={() => go("tracker")}>Open tracker <ArrowRight size={18} /></Button>
+        <Button variant="secondary" onClick={() => finishOnboarding("home")}>Go home</Button>
       </div>
     </div>
   );
@@ -1147,11 +1161,11 @@ function TrackerScreen({ went, setWent, onSubmit }) {
       <form className="tracker-form" onSubmit={onSubmit}>
         <Input label="Date" name="date" type="date" defaultValue={new Date().toISOString().slice(0, 10)} />
         <div className="went-toggle">
-          <button type="button" className={went ? "selected" : ""} onClick={() => setWent(true)}><CheckCircle2 size={18} /> I went</button>
-          <button type="button" className={!went ? "selected" : ""} onClick={() => setWent(false)}><TimerReset size={18} /> I missed it</button>
+          <Button type="button" variant="secondary" className={went ? "selected" : ""} onClick={() => setWent(true)}><CheckCircle2 size={18} /> I went</Button>
+          <Button type="button" variant="secondary" className={!went ? "selected" : ""} onClick={() => setWent(false)}><TimerReset size={18} /> I missed it</Button>
         </div>
         {went ? <WentFields /> : <MissedFields />}
-        <button className="primary">Save log</button>
+        <Button>Save log</Button>
       </form>
     </div>
   );
@@ -1204,7 +1218,7 @@ function ProgressScreen({ logs, slots, sessionStreak, currentWeekCompleted, week
           <CardList empty="No logs yet. Log your first session.">
             {[...logs].reverse().map((log) => (
               <div className="log-card" key={log.id}>
-                <span className={log.went ? "status good" : "status miss"}>{log.went ? "Went" : "Missed"}</span>
+                <Badge variant={log.went ? "success" : "miss"}>{log.went ? "Went" : "Missed"}</Badge>
                 <div>
                   <strong>{log.date}</strong>
                   <small>
@@ -1257,22 +1271,34 @@ function Input({ label, ...props }) {
   return (
     <label className="input-field">
       <span>{label}</span>
-      <input {...props} />
+      <UiInput {...props} />
     </label>
   );
 }
 
 function Select({ label, name, options, ...props }) {
+  const { onChange, value, defaultValue } = props;
+  const firstOption = options[0];
+  const fallbackValue = Array.isArray(firstOption) ? firstOption[0] : firstOption;
+  function handleValueChange(nextValue) {
+    onChange?.({ target: { name, value: nextValue } });
+  }
+
   return (
     <label className="input-field">
       <span>{label}</span>
-      <select name={name} {...props}>
+      <UiSelect name={name} value={value} defaultValue={defaultValue ?? (value === undefined ? fallbackValue : undefined)} onValueChange={handleValueChange}>
+        <SelectTrigger>
+          <SelectValue placeholder={label} />
+        </SelectTrigger>
+        <SelectContent>
         {options.map((option) => {
           const value = Array.isArray(option) ? option[0] : option;
           const optionLabel = Array.isArray(option) ? option[1] : option;
-          return <option key={value} value={value}>{optionLabel}</option>;
+          return <SelectItem key={value} value={value}>{optionLabel}</SelectItem>;
         })}
-      </select>
+        </SelectContent>
+      </UiSelect>
     </label>
   );
 }
@@ -1289,13 +1315,15 @@ function ReminderCard({ label, icon: Icon, children, onClick }) {
 
 function Toast({ title, message, onClose, onOpen }) {
   return (
-    <div className="toast" role="status" onClick={onOpen}>
+    <Card className="toast" role="status" onClick={onOpen}>
       <div>
         <strong>{title}</strong>
         <p>{message}</p>
         <small>Click to open prep list</small>
       </div>
-      <button
+      <Button
+        variant="ghost"
+        size="icon"
         onClick={(event) => {
           event.stopPropagation();
           onClose();
@@ -1303,18 +1331,18 @@ function Toast({ title, message, onClose, onOpen }) {
         aria-label="Close reminder test"
       >
         x
-      </button>
-    </div>
+      </Button>
+    </Card>
   );
 }
 
 function Stat({ label, value, icon: Icon }) {
   return (
-    <div className="stat-card">
+    <Card className="stat-card">
       {Icon && <span className="stat-icon"><Icon size={19} /></span>}
       <strong>{value}</strong>
       <span>{label}</span>
-    </div>
+    </Card>
   );
 }
 
